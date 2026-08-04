@@ -1,0 +1,22 @@
+name: platform
+
+services:
+  nginx:
+    extends:
+      file: deployments/base/compose.yaml
+      service: base
+
+    image: nginx:${NGINX_IMAGE:-1.30.4-alpine}
+    ports:
+      - ${NGINX_PORT:-80}:8080
+    volumes:
+      - ${NGINX_CONFIG:?NGINX_CONFIG is required}:/etc/nginx/nginx.conf:ro
+    extra_hosts:
+      - host.docker.internal:host-gateway
+
+    healthcheck:
+      test: wget -qO- http://127.0.0.1:8081/nginx_status >/dev/null
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 5s

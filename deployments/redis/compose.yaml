@@ -1,0 +1,23 @@
+name: platform
+
+services:
+  redis:
+    extends:
+      file: deployments/base/compose.yaml
+      service: base
+
+    image: redis:${REDIS_IMAGE:-8.8.1-alpine}
+    command: redis-server /usr/local/etc/redis/redis.conf --requirepass ${REDIS_PASSWORD:-password}
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-password}
+    ports:
+      - ${REDIS_PORT:-6379}:6379
+    volumes:
+      - ${REDIS_CONFIG}:/usr/local/etc/redis/redis.conf:ro
+
+    healthcheck:
+      test: REDISCLI_AUTH="$${REDIS_PASSWORD}" redis-cli ping | grep -q PONG
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 5s

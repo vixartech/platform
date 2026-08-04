@@ -1,0 +1,17 @@
+name: platform
+
+services:
+  loki:
+    extends:
+      file: deployments/base/compose.yaml
+      service: base
+
+    image: grafana/loki:${LOKI_IMAGE:-3.6.1}
+    command:
+      - -config.file=/etc/loki/loki.yaml
+    volumes:
+      - ${LOKI_CONFIG}:/etc/loki/loki.yaml:ro
+      - loki-data:/loki
+
+volumes:
+  loki-data:

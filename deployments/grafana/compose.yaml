@@ -1,0 +1,21 @@
+name: platform
+
+services:
+  grafana:
+    extends:
+      file: deployments/base/compose.yaml
+      service: base
+
+    image: grafana/grafana:${GRAFANA_IMAGE:-12.1.0}
+    environment:
+      GF_AUTH_ANONYMOUS_ENABLED: "true"
+      GF_AUTH_ANONYMOUS_ORG_ROLE: Admin
+      GF_AUTH_DISABLE_LOGIN_FORM: "true"
+    ports:
+      - ${GRAFANA_PORT:-3000}:3000
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ${GRAFANA_PROVISIONING}:/etc/grafana/provisioning:ro
+
+volumes:
+  grafana-data:

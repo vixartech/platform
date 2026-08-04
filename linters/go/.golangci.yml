@@ -1,0 +1,116 @@
+version: "2"
+run:
+  go: 1.26.5
+  modules-download-mode: vendor
+output:
+  path-mode: abs
+  formats:
+    text:
+      path: stdout
+linters:
+  default: all
+  disable:
+    - noinlineerr
+    - varnamelen
+    - exhaustruct
+    - gochecknoglobals
+    - ireturn
+    - recvcheck
+    - wsl
+  settings:
+    cyclop:
+      max-complexity: 7
+    gomoddirectives:
+      replace-allow-list:
+        - cloud.google.com/go/compute
+    funlen:
+      lines: 80
+      statements: 40
+    gocognit:
+      min-complexity: 10
+    mnd:
+      ignored-numbers:
+        - "0"
+        - "1"
+        - "2"
+    nestif:
+      min-complexity: 4
+    revive:
+      rules:
+        - name: context-keys-type
+          disabled: true
+    depguard:
+      rules:
+        main:
+          list-mode: lax
+          deny:
+            - pkg: github.com/pkg/errors
+    dupl:
+      threshold: 200
+    errcheck:
+      check-blank: true
+    gocyclo:
+      min-complexity: 7
+    govet:
+      disable:
+        - fieldalignment
+      enable-all: true
+    interfacebloat:
+      max: 3
+    lll:
+      line-length: 120
+    maintidx:
+      under: 45
+    nakedret:
+      max-func-lines: 0
+    tagliatelle:
+      case:
+        rules:
+          json: snake
+          mapstructure: snake
+          yaml: snake
+    wrapcheck:
+      ignore-sig-regexps:
+        - 'google\.golang\.org/grpc/status\.Error\('
+        - 'google\.golang\.org/grpc/internal/status\.Status\)\.Err\('
+        - 'trace\.Span\)\.Error\('
+        - 'pkg/servers/grpc\.Error\('
+  exclusions:
+    generated: lax
+    presets:
+      - common-false-positives
+      - legacy
+      - std-error-handling
+    rules:
+      - linters:
+          - lll
+        source: '^//go:generate '
+    paths:
+      - _easyjson.go
+      - bin$
+      - api$
+      - build$
+      - configs$
+      - deployments$
+      - docs$
+      - tools$
+      - vendor$
+      - \.git$
+formatters:
+  enable:
+    - gofmt
+    - gofumpt
+    - goimports
+  exclusions:
+    generated: lax
+    paths:
+      - _easyjson.go
+      - bin$
+      - api$
+      - build$
+      - configs$
+      - deployments$
+      - docs$
+      - tools$
+      - vendor$
+      - \.git$

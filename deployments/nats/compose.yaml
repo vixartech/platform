@@ -1,0 +1,30 @@
+name: platform
+
+services:
+  nats:
+    extends:
+      file: deployments/base/compose.yaml
+      service: base
+
+    image: nats:${NATS_IMAGE:-2.12.2-alpine}
+    command:
+      - -js
+      - -sd
+      - /data
+      - -m
+      - "8222"
+    ports:
+      - ${NATS_PORT:-4222}:4222
+      - ${NATS_MONITOR_PORT:-8222}:8222
+    volumes:
+      - nats-data:/data
+
+    healthcheck:
+      test: wget -qO- http://127.0.0.1:8222/healthz | grep -q ok
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 5s
+
+volumes:
+  nats-data:

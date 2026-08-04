@@ -1,0 +1,76 @@
+logging {
+  level  = "info"
+  format = "logfmt"
+}
+
+discovery.docker "containers" {
+  host = "unix:///var/run/docker.sock"
+}
+
+discovery.relabel "nginx_logs" {
+  targets = discovery.docker.containers.targets
+
+  rule {
+    source_labels = ["__meta_docker_container_label_com_docker_compose_service"]
+    regex         = "nginx"
+    action        = "keep"
+  }
+
+  rule {
+    target_label = "service"
+    replacement  = "nginx"
+  }
+
+  rule {
+    target_label = "env"
+    replacement  = "local"
+  }
+}
+
+loki.source.docker "nginx" {
+  host       = "unix:///var/run/docker.sock"
+  targets    = discovery.relabel.nginx_logs.output
+  forward_to = [loki.process.nginx_responses.receiver, loki.process.nginx_latency.receiver]
+}
+
+loki.process "nginx_responses" {
+  stage.json {
+    expressions = {
+      path   = "path",
+      status = "status",
+    }
+  }
+
+  stage.labels {
+    values = {
+      path   = "",
+      status = "",
+    }
+  }
+
+  stage.label_drop {
+    values = ["container", "container_name", "filename", "stream", "compose_project", "compose_service"]
+  }
+
+  forward_to = [loki.write.default.receiver]
+}
+
+loki.process "nginx_latency" {
+  stage.static_labels {
+    values = {
+      service = "nginx-latency",
+    }
+  }
+
+  stage.label_drop {
+    values = ["container", "container_name", "filename", "stream", "compose_project", "compose_service", "path", "status"]
+  }
+
+  forward_to = [loki.write.default.receiver]
+}
+
+loki.write "default" {
+  endpoint {
+    url = "http://loki:3100/loki/api/v1/push"
+  }
+}

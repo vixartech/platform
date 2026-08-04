@@ -1,0 +1,34 @@
+name: platform
+
+services:
+  postgres:
+    extends:
+      file: deployments/base/compose.yaml
+      service: base
+
+    build:
+      context: .
+      dockerfile: images/postgres/Dockerfile
+      args:
+        POSTGRES_IMAGE: ${POSTGRES_IMAGE:-18.4-alpine3.24}
+    image: gost-postgres:${POSTGRES_IMAGE:-18.4-alpine3.24}
+    command: postgres -c config_file=/etc/postgresql/postgresql.conf -c cron.database_name=db
+    environment:
+      POSTGRES_DB: db
+      POSTGRES_USER: ${POSTGRES_USER:-user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+    ports:
+      - ${POSTGRES_PORT:-5432}:5432
+    volumes:
+      - ${POSTGRES_CONFIG}:/etc/postgresql/postgresql.conf:ro
+      - postgres-data:/var/lib/postgresql
+
+    healthcheck:
+      test: pg_isready -U "$${POSTGRES_USER}" -d "$${POSTGRES_DB}"
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 5s
+
+volumes:
+  postgres-data:
