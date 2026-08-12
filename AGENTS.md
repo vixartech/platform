@@ -2,6 +2,12 @@
 
 This repository contains shared local platform tooling for Vixartech projects.
 
+## Shared Rules
+
+- Follow the shared Vixar repository boundaries guide in `vixartech/ai`: `guides/repository-boundaries.md`.
+- Follow the shared Vixar platform guide in `vixartech/ai`: `guides/platform.md`.
+- If a rule is useful for every Vixar project, move it to the shared guide instead of duplicating it here.
+
 ## Scope
 
 - Keep Docker Compose deployments, Dockerfiles, linters, and Make targets here.
