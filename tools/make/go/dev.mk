@@ -1,4 +1,4 @@
-GOLANGCI_LINT_CONFIG ?= $(PLATFORM_DIR)/linters/go/.golangci.yml
+GOLANGCI_LINT_CONFIG ?= $(PLATFORM_DIR)/configs/go/golangci.yml
 OAPI_CODEGEN_CONFIGS ?= $(wildcard api/http/*/*/config.yaml)
 GOFMT_PATHS          ?= cmd internal pkg tools
 
