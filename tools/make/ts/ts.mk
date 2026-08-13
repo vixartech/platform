@@ -65,6 +65,10 @@ ts/build:
 ts/next/build:
 	@pnpm exec next build
 
+.PHONY: ts/next/start
+ts/next/start:
+	@pnpm exec next start
+
 .PHONY: ts/test/e2e
 ts/test/e2e:
 	@pnpm run test:e2e
