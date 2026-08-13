@@ -25,7 +25,7 @@ infra/listmonk/up: infra/listmonk/database
 
 .PHONY: infra/listmonk/database
 infra/listmonk/database:
-	$(PLATFORM_COMPOSE) exec -T $(POSTGRES_SERVICE) psql -U "$$POSTGRES_USER" -d "$$POSTGRES_DB" -v database="$(LISTMONK_DB)" -v ON_ERROR_STOP=1 < "$(PLATFORM_DIR)/deployments/listmonk/sql/database.sql"
+	-$(PLATFORM_COMPOSE) exec -T $(POSTGRES_SERVICE) createdb -U "$$POSTGRES_USER" "$(LISTMONK_DB)"
 
 .PHONY: infra/listmonk/install
 infra/listmonk/install: infra/listmonk/database
