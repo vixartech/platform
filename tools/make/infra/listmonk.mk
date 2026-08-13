@@ -5,16 +5,12 @@ LISTMONK_PORT           ?= 9000
 LISTMONK_ADMIN_USER     ?= admin
 LISTMONK_ADMIN_PASSWORD ?= password
 LISTMONK_DB             ?= listmonk
-LISTMONK_API_USER       ?= user
-LISTMONK_API_TOKEN      ?= user-local-dev-token
 
 export LISTMONK_IMAGE
 export LISTMONK_PORT
 export LISTMONK_ADMIN_USER
 export LISTMONK_ADMIN_PASSWORD
 export LISTMONK_DB
-export LISTMONK_API_USER
-export LISTMONK_API_TOKEN
 
 LISTMONK_COMPOSE_FILE := $(PLATFORM_DIR)/deployments/listmonk/compose.yaml
 PLATFORM_COMPOSE      += -f $(LISTMONK_COMPOSE_FILE)
@@ -37,7 +33,7 @@ infra/listmonk/install: infra/listmonk/database
 
 .PHONY: infra/listmonk/seed
 infra/listmonk/seed: infra/listmonk/database
-	$(PLATFORM_COMPOSE) exec -T -e LISTMONK_API_USER="$(LISTMONK_API_USER)" -e LISTMONK_API_TOKEN="$(LISTMONK_API_TOKEN)" $(POSTGRES_SERVICE) sh -c 'TOKEN_HASH="$$(printf "%s" "$$LISTMONK_API_TOKEN" | sha256sum | awk "{print \$$1}")"; psql -U "$$POSTGRES_USER" -d "$(LISTMONK_DB)" -v ON_ERROR_STOP=1 -v api_user="$$LISTMONK_API_USER" -v token_hash="$$TOKEN_HASH"' < "$(PLATFORM_DIR)/deployments/listmonk/sql/seed.sql"
+	$(PLATFORM_COMPOSE) exec -T $(POSTGRES_SERVICE) psql -U "$$POSTGRES_USER" -d "$(LISTMONK_DB)" -v ON_ERROR_STOP=1 < "$(PLATFORM_DIR)/deployments/listmonk/sql/seed.sql"
 
 .PHONY: infra/listmonk/setup
 infra/listmonk/setup: infra/mailpit/up infra/listmonk/install infra/listmonk/up infra/listmonk/seed infra/listmonk/restart
