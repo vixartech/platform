@@ -9,7 +9,7 @@ export MAILPIT_SMTP_PORT
 export MAILPIT_HTTP_PORT
 
 MAILPIT_COMPOSE_FILE := $(PLATFORM_DIR)/deployments/mailpit/compose.yaml
-PLATFORM_COMPOSE    += -f $(MAILPIT_COMPOSE_FILE)
+PLATFORM_COMPOSE     += -f $(MAILPIT_COMPOSE_FILE)
 
 .PHONY: infra/mailpit/config
 infra/mailpit/config:
