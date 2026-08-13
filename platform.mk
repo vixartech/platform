@@ -22,6 +22,6 @@ include $(PLATFORM_DIR)/tools/make/go/build.mk
 include $(PLATFORM_DIR)/tools/make/go/image.mk
 include $(PLATFORM_DIR)/tools/make/go/dev.mk
 
-include $(PLATFORM_DIR)/tools/make/web/web.mk
+include $(PLATFORM_DIR)/tools/make/ts/ts.mk
 
 include $(PLATFORM_DIR)/tools/make/load/load.mk
