@@ -1,11 +1,4 @@
 TS_DEV_PORT  ?= 3001
-TS_DEV_FLAGS ?=
-TS_BIOME_CONFIG ?= $(PLATFORM_DIR)/configs/ts/biome.json
-TS_TYPECHECK_FLAGS ?= --noEmit --incremental false
-
-ifneq ($(strip $(TS_DEV_PORT)),)
-TS_DEV_FLAGS += -p $(TS_DEV_PORT)
-endif
 
 .PHONY: ts/install
 ts/install:
@@ -13,7 +6,7 @@ ts/install:
 
 .PHONY: ts/dev
 ts/dev:
-	@pnpm exec next dev $(TS_DEV_FLAGS)
+	@pnpm exec next dev -p $(TS_DEV_PORT)
 
 .PHONY: ts/check
 ts/check:
@@ -21,7 +14,7 @@ ts/check:
 
 .PHONY: ts/typecheck
 ts/typecheck:
-	@pnpm exec tsc $(TS_TYPECHECK_FLAGS)
+	@pnpm exec tsc --noEmit --incremental false
 
 .PHONY: ts/lib/check
 ts/lib/check: ts/biome/check ts/typecheck
@@ -35,27 +28,27 @@ ts/next/check: ts/biome/check ts/next/typegen ts/typecheck
 
 .PHONY: ts/biome/check
 ts/biome/check:
-	@pnpm exec biome check . --config-path $(TS_BIOME_CONFIG)
+	@pnpm exec biome check . --config-path $(PLATFORM_DIR)/configs/ts/biome.json
 
 .PHONY: ts/biome/write
 ts/biome/write:
-	@pnpm exec biome check . --write --config-path $(TS_BIOME_CONFIG)
+	@pnpm exec biome check . --write --config-path $(PLATFORM_DIR)/configs/ts/biome.json
 
 .PHONY: ts/format
 ts/format:
-	@pnpm exec biome format . --write --config-path $(TS_BIOME_CONFIG)
+	@pnpm exec biome format . --write --config-path $(PLATFORM_DIR)/configs/ts/biome.json
 
 .PHONY: ts/format/check
 ts/format/check:
-	@pnpm exec biome format . --config-path $(TS_BIOME_CONFIG)
+	@pnpm exec biome format . --config-path $(PLATFORM_DIR)/configs/ts/biome.json
 
 .PHONY: ts/lint
 ts/lint:
-	@pnpm exec biome lint . --write --config-path $(TS_BIOME_CONFIG)
+	@pnpm exec biome lint . --write --config-path $(PLATFORM_DIR)/configs/ts/biome.json
 
 .PHONY: ts/lint/check
 ts/lint/check:
-	@pnpm exec biome lint . --config-path $(TS_BIOME_CONFIG)
+	@pnpm exec biome lint . --config-path $(PLATFORM_DIR)/configs/ts/biome.json
 
 .PHONY: ts/build
 ts/build:
