@@ -1,0 +1,39 @@
+name: platform
+
+services:
+  listmonk:
+    extends:
+      file: deployments/base/compose.yaml
+      service: base
+
+    image: listmonk/listmonk:${LISTMONK_IMAGE:-latest}
+    command:
+      - sh
+      - -c
+      - ./listmonk --install --idempotent --yes && ./listmonk --upgrade --yes && ./listmonk
+    environment:
+      LISTMONK_app__address: 0.0.0.0:9000
+      LISTMONK_db__host: postgres
+      LISTMONK_db__port: 5432
+      LISTMONK_db__user: ${POSTGRES_USER:-user}
+      LISTMONK_db__password: ${POSTGRES_PASSWORD:-password}
+      LISTMONK_db__database: ${LISTMONK_DB:-listmonk}
+      LISTMONK_db__ssl_mode: disable
+      LISTMONK_db__max_open: 25
+      LISTMONK_db__max_idle: 25
+      LISTMONK_db__max_lifetime: 300s
+      LISTMONK_ADMIN_USER: ${LISTMONK_ADMIN_USER:-admin}
+      LISTMONK_ADMIN_PASSWORD: ${LISTMONK_ADMIN_PASSWORD:-password}
+      TZ: Etc/UTC
+    ports:
+      - ${LISTMONK_PORT:-9000}:9000
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+    healthcheck:
+      test: wget -qO- http://127.0.0.1:9000/ | grep -q listmonk
+      interval: 10s
+      timeout: 3s
+      retries: 10
+      start_period: 15s

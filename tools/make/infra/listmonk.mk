@@ -1,0 +1,53 @@
+LISTMONK_SERVICE ?= listmonk
+
+LISTMONK_IMAGE          ?= v6.2.0
+LISTMONK_PORT           ?= 9000
+LISTMONK_ADMIN_USER     ?= admin
+LISTMONK_ADMIN_PASSWORD ?= password
+LISTMONK_DB             ?= listmonk
+
+export LISTMONK_IMAGE
+export LISTMONK_PORT
+export LISTMONK_ADMIN_USER
+export LISTMONK_ADMIN_PASSWORD
+export LISTMONK_DB
+
+LISTMONK_COMPOSE_FILE := $(PLATFORM_DIR)/deployments/listmonk/compose.yaml
+PLATFORM_COMPOSE      += -f $(LISTMONK_COMPOSE_FILE)
+
+.PHONY: infra/listmonk/config
+infra/listmonk/config:
+	$(PLATFORM_COMPOSE) config $(LISTMONK_SERVICE)
+
+.PHONY: infra/listmonk/up
+infra/listmonk/up:
+	$(PLATFORM_COMPOSE) exec -T $(POSTGRES_SERVICE) sh -c 'psql -U "$$POSTGRES_USER" -d "$$POSTGRES_DB" -tc "SELECT 1 FROM pg_database WHERE datname = '\''$(LISTMONK_DB)'\''" | grep -q 1 || createdb -U "$$POSTGRES_USER" "$(LISTMONK_DB)"'
+	$(PLATFORM_COMPOSE) up -d $(LISTMONK_SERVICE)
+
+.PHONY: infra/listmonk/start
+infra/listmonk/start:
+	$(PLATFORM_COMPOSE) start $(LISTMONK_SERVICE)
+
+.PHONY: infra/listmonk/stop
+infra/listmonk/stop:
+	$(PLATFORM_COMPOSE) stop $(LISTMONK_SERVICE)
+
+.PHONY: infra/listmonk/restart
+infra/listmonk/restart:
+	$(PLATFORM_COMPOSE) restart $(LISTMONK_SERVICE)
+
+.PHONY: infra/listmonk/ps
+infra/listmonk/ps:
+	$(PLATFORM_COMPOSE) ps $(LISTMONK_SERVICE)
+
+.PHONY: infra/listmonk/logs
+infra/listmonk/logs:
+	$(PLATFORM_COMPOSE) logs -f $(LISTMONK_SERVICE)
+
+.PHONY: infra/listmonk/shell
+infra/listmonk/shell:
+	$(PLATFORM_COMPOSE) exec $(LISTMONK_SERVICE) sh
+
+.PHONY: infra/listmonk/remove
+infra/listmonk/remove:
+	$(PLATFORM_COMPOSE) rm --stop --force $(LISTMONK_SERVICE)
