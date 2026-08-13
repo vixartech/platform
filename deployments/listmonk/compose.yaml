@@ -8,9 +8,7 @@ services:
 
     image: listmonk/listmonk:${LISTMONK_IMAGE:-latest}
     command:
-      - sh
-      - -c
-      - ./listmonk --install --idempotent --yes && ./listmonk --upgrade --yes && ./listmonk
+      - ./listmonk
     environment:
       LISTMONK_app__address: 0.0.0.0:9000
       LISTMONK_db__host: postgres

@@ -20,9 +20,20 @@ infra/listmonk/config:
 	$(PLATFORM_COMPOSE) config $(LISTMONK_SERVICE)
 
 .PHONY: infra/listmonk/up
-infra/listmonk/up:
-	$(PLATFORM_COMPOSE) exec -T $(POSTGRES_SERVICE) sh -c 'psql -U "$$POSTGRES_USER" -d "$$POSTGRES_DB" -tc "SELECT 1 FROM pg_database WHERE datname = '\''$(LISTMONK_DB)'\''" | grep -q 1 || createdb -U "$$POSTGRES_USER" "$(LISTMONK_DB)"'
+infra/listmonk/up: infra/listmonk/database
 	$(PLATFORM_COMPOSE) up -d $(LISTMONK_SERVICE)
+
+.PHONY: infra/listmonk/database
+infra/listmonk/database:
+	$(PLATFORM_COMPOSE) exec -T $(POSTGRES_SERVICE) sh -c 'psql -U "$$POSTGRES_USER" -d "$$POSTGRES_DB" -tc "SELECT 1 FROM pg_database WHERE datname = '\''$(LISTMONK_DB)'\''" | grep -q 1 || createdb -U "$$POSTGRES_USER" "$(LISTMONK_DB)"'
+
+.PHONY: infra/listmonk/install
+infra/listmonk/install: infra/listmonk/database
+	$(PLATFORM_COMPOSE) run --rm --no-deps $(LISTMONK_SERVICE) ./listmonk --install --idempotent --yes
+
+.PHONY: infra/listmonk/upgrade
+infra/listmonk/upgrade:
+	$(PLATFORM_COMPOSE) run --rm --no-deps $(LISTMONK_SERVICE) ./listmonk --upgrade --yes
 
 .PHONY: infra/listmonk/start
 infra/listmonk/start:
