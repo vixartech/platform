@@ -61,6 +61,10 @@ ts/lint/check:
 ts/build:
 	@pnpm run build
 
+.PHONY: ts/next/build
+ts/next/build:
+	@pnpm exec next build
+
 .PHONY: ts/test/e2e
 ts/test/e2e:
 	@pnpm run test:e2e
