@@ -35,12 +35,12 @@ infra/listmonk/database:
 infra/listmonk/install: infra/listmonk/database
 	$(PLATFORM_COMPOSE) run --rm --no-deps $(LISTMONK_SERVICE) ./listmonk --install --idempotent --yes
 
-.PHONY: infra/listmonk/dev-seed
-infra/listmonk/dev-seed: infra/listmonk/database
-	$(PLATFORM_COMPOSE) exec -T -e LISTMONK_SIGNAL_USER="$(LISTMONK_SIGNAL_USER)" -e LISTMONK_SIGNAL_TOKEN="$(LISTMONK_SIGNAL_TOKEN)" $(POSTGRES_SERVICE) sh -c 'TOKEN_HASH="$$(printf "%s" "$$LISTMONK_SIGNAL_TOKEN" | sha256sum | awk "{print \$$1}")"; psql -U "$$POSTGRES_USER" -d "$(LISTMONK_DB)" -v ON_ERROR_STOP=1 -v signal_user="$$LISTMONK_SIGNAL_USER" -v token_hash="$$TOKEN_HASH"' < "$(PLATFORM_DIR)/deployments/listmonk/sql/dev-seed.sql"
+.PHONY: infra/listmonk/seed
+infra/listmonk/seed: infra/listmonk/database
+	$(PLATFORM_COMPOSE) exec -T -e LISTMONK_SIGNAL_USER="$(LISTMONK_SIGNAL_USER)" -e LISTMONK_SIGNAL_TOKEN="$(LISTMONK_SIGNAL_TOKEN)" $(POSTGRES_SERVICE) sh -c 'TOKEN_HASH="$$(printf "%s" "$$LISTMONK_SIGNAL_TOKEN" | sha256sum | awk "{print \$$1}")"; psql -U "$$POSTGRES_USER" -d "$(LISTMONK_DB)" -v ON_ERROR_STOP=1 -v signal_user="$$LISTMONK_SIGNAL_USER" -v token_hash="$$TOKEN_HASH"' < "$(PLATFORM_DIR)/deployments/listmonk/sql/seed.sql"
 
-.PHONY: infra/listmonk/dev-setup
-infra/listmonk/dev-setup: infra/mailpit/up infra/listmonk/install infra/listmonk/up infra/listmonk/dev-seed infra/listmonk/restart
+.PHONY: infra/listmonk/setup
+infra/listmonk/setup: infra/mailpit/up infra/listmonk/install infra/listmonk/up infra/listmonk/seed infra/listmonk/restart
 
 .PHONY: infra/listmonk/upgrade
 infra/listmonk/upgrade:
