@@ -9,11 +9,11 @@ insert into users (
   list_role_id,
   status
 ) values (
-  :'signal_user',
+  :'api_user',
   false,
   :'token_hash',
-  :'signal_user' || '@api',
-  :'signal_user',
+  :'api_user' || '@api',
+  :'api_user',
   'api',
   1,
   null,
