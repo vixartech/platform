@@ -1,6 +1,7 @@
 TS_DEV_PORT  ?= 3001
 TS_DEV_FLAGS ?=
 TS_BIOME_CONFIG ?= $(PLATFORM_DIR)/configs/ts/biome.json
+TS_TYPECHECK_FLAGS ?= --noEmit --incremental false
 
 ifneq ($(strip $(TS_DEV_PORT)),)
 TS_DEV_FLAGS += -p $(TS_DEV_PORT)
@@ -17,6 +18,20 @@ ts/dev:
 .PHONY: ts/check
 ts/check:
 	@pnpm run check:ci
+
+.PHONY: ts/typecheck
+ts/typecheck:
+	@pnpm exec tsc $(TS_TYPECHECK_FLAGS)
+
+.PHONY: ts/lib/check
+ts/lib/check: ts/biome/check ts/typecheck
+
+.PHONY: ts/next/typegen
+ts/next/typegen:
+	@pnpm exec next typegen
+
+.PHONY: ts/next/check
+ts/next/check: ts/biome/check ts/next/typegen ts/typecheck
 
 .PHONY: ts/biome/check
 ts/biome/check:
