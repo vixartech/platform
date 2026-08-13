@@ -12,6 +12,7 @@ include $(PLATFORM_DIR)/tools/make/bin/bin.mk
 include $(PLATFORM_DIR)/tools/make/infra/postgres.mk
 include $(PLATFORM_DIR)/tools/make/infra/redis.mk
 include $(PLATFORM_DIR)/tools/make/infra/nats.mk
+include $(PLATFORM_DIR)/tools/make/infra/mailpit.mk
 include $(PLATFORM_DIR)/tools/make/infra/listmonk.mk
 include $(PLATFORM_DIR)/tools/make/infra/nginx.mk
 include $(PLATFORM_DIR)/tools/make/infra/loki.mk
