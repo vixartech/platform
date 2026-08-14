@@ -16,6 +16,8 @@ export POSTGRES_CONFIG
 
 POSTGRES_MIGRATIONS ?= $(CURDIR)/migrations
 POSTGRES_DSN        ?= postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@localhost:$(POSTGRES_PORT)/$(POSTGRES_DB)?sslmode=disable
+POSTGRES_MIGRATIONS_TABLE ?= $(notdir $(CURDIR))_schema_migrations
+POSTGRES_MIGRATION_DSN    ?= $(POSTGRES_DSN)&x-migrations-table=$(POSTGRES_MIGRATIONS_TABLE)
 
 POSTGRES_COMPOSE_FILE := $(PLATFORM_DIR)/deployments/postgres/compose.yaml
 PLATFORM_COMPOSE      += -f $(POSTGRES_COMPOSE_FILE)
@@ -62,8 +64,8 @@ infra/postgres/migrations: bin/migrate
 
 .PHONY: infra/postgres/migrate
 infra/postgres/migrate: bin/migrate
-	@$(BIN_PATH)/migrate -path "$(POSTGRES_MIGRATIONS)" -database "$(POSTGRES_DSN)" up
+	@$(BIN_PATH)/migrate -path "$(POSTGRES_MIGRATIONS)" -database "$(POSTGRES_MIGRATION_DSN)" up
 
 .PHONY: infra/postgres/rollback
 infra/postgres/rollback: bin/migrate
-	@$(BIN_PATH)/migrate -path "$(POSTGRES_MIGRATIONS)" -database "$(POSTGRES_DSN)" down 1
+	@$(BIN_PATH)/migrate -path "$(POSTGRES_MIGRATIONS)" -database "$(POSTGRES_MIGRATION_DSN)" down 1
