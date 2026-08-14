@@ -31,7 +31,10 @@ go/generate/sqlc: bin/sqlc
 
 .PHONY: go/lint
 go/lint: bin/golangci-lint
-	@gofmt -w $$(find $(GOFMT_PATHS) -name '*.go' -type f | sort)
+	@files="$$(for path in $(GOFMT_PATHS); do \
+		[ ! -e "$$path" ] || find "$$path" -name '*.go' -type f; \
+	done | sort)"; \
+	if [ -n "$$files" ]; then gofmt -w $$files; fi
 	@go vet ./...
 	@$(BIN_PATH)/golangci-lint run ./... --config $(GOLANGCI_LINT_CONFIG) --fix
 
