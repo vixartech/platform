@@ -4,6 +4,8 @@ NGINX_IMAGE  ?= 1.30.4-alpine
 NGINX_PORT   ?= 80
 NGINX_CONFIG ?= $(PLATFORM_DIR)/deployments/nginx/configs/nginx.conf
 
+override NGINX_CONFIG := $(abspath $(NGINX_CONFIG))
+
 export NGINX_IMAGE
 export NGINX_PORT
 export NGINX_CONFIG

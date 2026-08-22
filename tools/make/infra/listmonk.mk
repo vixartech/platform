@@ -5,6 +5,7 @@ LISTMONK_PORT           ?= 9000
 LISTMONK_ADMIN_USER     ?= admin
 LISTMONK_ADMIN_PASSWORD ?= password
 LISTMONK_DB             ?= listmonk
+LISTMONK_SQL            ?= $(PLATFORM_DIR)/deployments/listmonk/sql/seed.sql
 
 export LISTMONK_IMAGE
 export LISTMONK_PORT
@@ -33,7 +34,7 @@ infra/listmonk/install: infra/listmonk/database
 
 .PHONY: infra/listmonk/seed
 infra/listmonk/seed: infra/listmonk/database
-	$(PLATFORM_COMPOSE) exec -T $(POSTGRES_SERVICE) psql -U "$$POSTGRES_USER" -d "$(LISTMONK_DB)" -v ON_ERROR_STOP=1 < "$(PLATFORM_DIR)/deployments/listmonk/sql/seed.sql"
+	$(PLATFORM_COMPOSE) exec -T $(POSTGRES_SERVICE) psql -U "$$POSTGRES_USER" -d "$(LISTMONK_DB)" -v ON_ERROR_STOP=1 < "$(LISTMONK_SQL)"
 
 .PHONY: infra/listmonk/setup
 infra/listmonk/setup: infra/mailpit/up infra/listmonk/install infra/listmonk/up infra/listmonk/seed infra/listmonk/restart

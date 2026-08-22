@@ -37,7 +37,7 @@ values (
     "name": "mailpit",
     "uuid": "",
     "enabled": true,
-    "host": "platform-mailpit",
+    "host": "mailpit",
     "hello_hostname": "",
     "port": 1025,
     "auth_protocol": "none",
