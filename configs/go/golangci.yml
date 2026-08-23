@@ -45,6 +45,143 @@ linters:
           list-mode: lax
           deny:
             - pkg: github.com/pkg/errors
+        hexagonal-domain:
+          files:
+            - "**/internal/app/*/domain/**/*.go"
+            - "!$test"
+          list-mode: strict
+          allow:
+            - $gostd
+            - github.com/google/uuid$
+        gost-service:
+          files:
+            - "**/gost/internal/app/gost/service/**/*.go"
+          list-mode: strict
+          allow:
+            - $gostd
+            - github.com/vixartech/gear
+            - github.com/vixartech/gost/internal/app/gost/domain
+            - github.com/vixartech/gost/internal/app/gost/service
+        id-service:
+          files:
+            - "**/id/internal/app/id/service/**/*.go"
+          list-mode: strict
+          allow:
+            - $gostd
+            - github.com/google/uuid
+            - github.com/vixartech/gear
+            - github.com/vixartech/id/internal/app/id/domain
+            - github.com/vixartech/id/internal/app/id/service
+        signal-service:
+          files:
+            - "**/signal/internal/app/signal/service/**/*.go"
+          list-mode: strict
+          allow:
+            - $gostd
+            - github.com/vixartech/gear
+            - github.com/vixartech/signal/internal/app/signal/domain
+            - github.com/vixartech/signal/internal/app/signal/service
+        relay-service:
+          files:
+            - "**/relay/internal/app/relay/service/**/*.go"
+          list-mode: strict
+          allow:
+            - $gostd
+            - github.com/vixartech/gear
+            - github.com/vixartech/relay/internal/app/relay/domain
+            - github.com/vixartech/relay/internal/app/relay/service
+        gost-ports:
+          files:
+            - "**/gost/internal/app/gost/ports/**/*.go"
+            - "!$test"
+          list-mode: strict
+          allow:
+            - $gostd
+            - github.com/vixartech/gear
+            - github.com/vixartech/gost/internal/app/gost/domain
+            - github.com/vixartech/gost/internal/app/gost/service
+            - github.com/vixartech/protocol
+        id-ports:
+          files:
+            - "**/id/internal/app/id/ports/**/*.go"
+            - "!$test"
+          list-mode: strict
+          allow:
+            - $gostd
+            - github.com/go-jose/go-jose
+            - github.com/google/uuid
+            - github.com/ory/fosite
+            - github.com/valyala/fasthttp
+            - github.com/vixartech/gear
+            - github.com/vixartech/id/internal/app/id/domain
+            - github.com/vixartech/id/internal/app/id/service
+            - github.com/vixartech/protocol
+            - golang.org/x/oauth2
+            - google.golang.org/protobuf
+        signal-ports:
+          files:
+            - "**/signal/internal/app/signal/ports/**/*.go"
+            - "!$test"
+          list-mode: strict
+          allow:
+            - $gostd
+            - github.com/vixartech/gear
+            - github.com/vixartech/protocol
+            - github.com/vixartech/signal/internal/app/signal/domain
+            - github.com/vixartech/signal/internal/app/signal/service
+            - google.golang.org/protobuf
+        gost-adapters:
+          files:
+            - "**/gost/internal/app/gost/adapters/**/*.go"
+            - "!$test"
+          list-mode: strict
+          allow:
+            - $gostd
+            - github.com/mailru/easyjson
+            - github.com/samber/hot
+            - github.com/vixartech/gear
+            - github.com/vixartech/gost/internal/app/gost/adapters/postgres/gen
+            - github.com/vixartech/gost/internal/app/gost/domain
+            - github.com/vixartech/gost/internal/app/gost/service
+        id-adapters:
+          files:
+            - "**/id/internal/app/id/adapters/**/*.go"
+            - "!$test"
+          list-mode: strict
+          allow:
+            - $gostd
+            - github.com/go-webauthn/webauthn
+            - github.com/google/uuid
+            - github.com/jackc/pgx
+            - github.com/ory/fosite
+            - github.com/vixartech/gear
+            - github.com/vixartech/id/internal/app/id/adapters/postgres/gen
+            - github.com/vixartech/id/internal/app/id/domain
+            - github.com/vixartech/id/internal/app/id/service
+            - github.com/vixartech/protocol
+            - golang.org/x/crypto
+            - google.golang.org/protobuf
+        signal-adapters:
+          files:
+            - "**/signal/internal/app/signal/adapters/**/*.go"
+            - "!$test"
+          list-mode: strict
+          allow:
+            - $gostd
+            - github.com/vixartech/gear
+            - github.com/vixartech/signal/internal/app/signal/domain
+            - github.com/vixartech/signal/internal/app/signal/service
+        relay-adapters:
+          files:
+            - "**/relay/internal/app/relay/adapters/**/*.go"
+            - "!$test"
+          list-mode: strict
+          allow:
+            - $gostd
+            - github.com/vixartech/gear
+            - github.com/vixartech/relay/internal/app/relay/adapters/postgres/gen
+            - github.com/vixartech/relay/internal/app/relay/domain
+            - github.com/vixartech/relay/internal/app/relay/service
     dupl:
       threshold: 200
     errcheck:
