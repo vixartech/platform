@@ -62,6 +62,13 @@ ts/next/build:
 ts/next/start:
 	@pnpm exec next start
 
+.PHONY: ts/next/start/standalone
+ts/next/start/standalone:
+	@mkdir -p .next/standalone/.next
+	@cp -R .next/static .next/standalone/.next/
+	@if [ -d public ]; then cp -R public .next/standalone/; fi
+	@node .next/standalone/server.js
+
 .PHONY: ts/test/e2e
 ts/test/e2e:
 	@pnpm run test:e2e
