@@ -36,6 +36,7 @@ func main() {
 var (
 	errArchitecture    = errors.New("hexagonal architecture violations")
 	errInvalidLocation = errors.New("invalid application package")
+	errMissingPath     = errors.New("application package has no import path")
 )
 
 func run(ctx context.Context) error {
@@ -87,9 +88,7 @@ type packageInfo struct {
 }
 
 func listPackages(ctx context.Context) ([]packageInfo, error) {
-	const packageTemplate = "{{json .ImportPath}} {{json .Imports}}"
-
-	output, err := commandOutput(ctx, "go", "list", "-f", packageTemplate, "./internal/app/...")
+	output, err := commandOutput(ctx, "go", "list", "-json", "./internal/app/...")
 	if err != nil {
 		return nil, fmt.Errorf("list application packages: %w", err)
 	}
@@ -102,8 +101,8 @@ func decodePackages(input io.Reader) ([]packageInfo, error) {
 	packages := make([]packageInfo, 0)
 
 	for {
-		var current packageInfo
-		if err := decoder.Decode(&current.ImportPath); err != nil {
+		var fields map[string]json.RawMessage
+		if err := decoder.Decode(&fields); err != nil {
 			if errors.Is(err, io.EOF) {
 				break
 			}
@@ -111,14 +110,39 @@ func decodePackages(input io.Reader) ([]packageInfo, error) {
 			return nil, fmt.Errorf("decode application package: %w", err)
 		}
 
-		if err := decoder.Decode(&current.Imports); err != nil {
-			return nil, fmt.Errorf("decode application imports: %w", err)
+		current, err := decodePackage(fields)
+		if err != nil {
+			return nil, err
 		}
 
 		packages = append(packages, current)
 	}
 
 	return packages, nil
+}
+
+func decodePackage(fields map[string]json.RawMessage) (packageInfo, error) {
+	pathData, exists := fields["ImportPath"]
+	if !exists {
+		return packageInfo{}, errMissingPath
+	}
+
+	var current packageInfo
+
+	if err := json.Unmarshal(pathData, &current.ImportPath); err != nil {
+		return packageInfo{}, fmt.Errorf("decode application import path: %w", err)
+	}
+
+	importsData, exists := fields["Imports"]
+	if !exists {
+		return current, nil
+	}
+
+	if err := json.Unmarshal(importsData, &current.Imports); err != nil {
+		return packageInfo{}, fmt.Errorf("decode application imports: %w", err)
+	}
+
+	return current, nil
 }
 
 func validatePackages(modulePath string, packages []packageInfo) []string {

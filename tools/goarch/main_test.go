@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"slices"
+	"strings"
 	"testing"
 )
 
@@ -65,6 +66,58 @@ func TestValidatePackages(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestDecodePackages(t *testing.T) {
+	t.Parallel()
+
+	tests := decodePackageCases()
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			t.Parallel()
+
+			actual, err := decodePackages(strings.NewReader(test.input))
+			if !errors.Is(err, test.expectedErr) {
+				t.Fatalf("decodePackages() error = %v, expected %v", err, test.expectedErr)
+			}
+
+			if !slices.EqualFunc(actual, test.expected, equalPackageInfo) {
+				t.Errorf("decodePackages() = %#v, expected %#v", actual, test.expected)
+			}
+		})
+	}
+}
+
+type decodePackageCase struct {
+	name        string
+	input       string
+	expected    []packageInfo
+	expectedErr error
+}
+
+func decodePackageCases() []decodePackageCase {
+	return []decodePackageCase{
+		{
+			name:  "go list package",
+			input: `{"ImportPath":"example/domain","Imports":["errors"]}`,
+			expected: []packageInfo{
+				{ImportPath: "example/domain", Imports: []string{"errors"}},
+			},
+		},
+		{
+			name:  "package without imports",
+			input: `{"ImportPath":"example/domain"}`,
+			expected: []packageInfo{
+				{ImportPath: "example/domain"},
+			},
+		},
+		{name: "missing import path", input: `{}`, expectedErr: errMissingPath},
+	}
+}
+
+func equalPackageInfo(left packageInfo, right packageInfo) bool {
+	return left.ImportPath == right.ImportPath && slices.Equal(left.Imports, right.Imports)
 }
 
 type locateCase struct {
