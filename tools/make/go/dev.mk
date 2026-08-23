@@ -1,6 +1,7 @@
 GOLANGCI_LINT_CONFIG ?= $(PLATFORM_DIR)/configs/go/golangci.yml
 OAPI_CODEGEN_CONFIGS ?= $(wildcard api/http/*/*/config.yaml)
 GOFMT_PATHS          ?= cmd internal pkg tools
+GOARCH_FILES         := $(filter-out %_test.go,$(wildcard $(PLATFORM_DIR)/tools/goarch/*.go))
 
 .PHONY: go/vendor
 go/vendor:
@@ -29,8 +30,12 @@ go/generate/proto: bin/buf bin/protoc-gen-go bin/protoc-gen-go-grpc bin/protoc-g
 go/generate/sqlc: bin/sqlc
 	@$(BIN_PATH)/sqlc generate
 
+.PHONY: go/architecture
+go/architecture:
+	@go run $(GOARCH_FILES)
+
 .PHONY: go/lint
-go/lint: bin/golangci-lint
+go/lint: bin/golangci-lint go/architecture
 	@files="$$(for path in $(GOFMT_PATHS); do \
 		[ ! -e "$$path" ] || find "$$path" -name '*.go' -type f; \
 	done | sort)"; \
