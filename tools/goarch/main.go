@@ -16,6 +16,16 @@ import (
 	"strings"
 )
 
+const (
+	layerDomain   = "domain"
+	layerService  = "service"
+	layerPorts    = "ports"
+	layerAdapters = "adapters"
+
+	boundaryOwnerIndex = 2
+	boundaryParts      = boundaryOwnerIndex + 1
+)
+
 func main() {
 	if err := run(context.Background()); err != nil {
 		log.Print(err)
@@ -23,7 +33,10 @@ func main() {
 	}
 }
 
-var errInvalidLocation = errors.New("invalid application package")
+var (
+	errArchitecture    = errors.New("hexagonal architecture violations")
+	errInvalidLocation = errors.New("invalid application package")
+)
 
 func run(ctx context.Context) error {
 	applicationRoot := filepath.Join("internal", "app")
@@ -47,7 +60,7 @@ func run(ctx context.Context) error {
 
 	violations := validatePackages(strings.TrimSpace(modulePath), packages)
 	if len(violations) != 0 {
-		return fmt.Errorf("hexagonal architecture violations:\n%s", strings.Join(violations, "\n"))
+		return fmt.Errorf("%w:\n%s", errArchitecture, strings.Join(violations, "\n"))
 	}
 
 	return nil
@@ -57,6 +70,7 @@ func commandOutput(ctx context.Context, name string, arguments ...string) (strin
 	command := exec.CommandContext(ctx, name, arguments...)
 
 	var stderr bytes.Buffer
+
 	command.Stderr = &stderr
 
 	output, err := command.Output()
@@ -73,30 +87,32 @@ type packageInfo struct {
 }
 
 func listPackages(ctx context.Context) ([]packageInfo, error) {
-	command := exec.CommandContext(ctx, "go", "list", "-json", "./internal/app/...")
+	const packageTemplate = "{{json .ImportPath}} {{json .Imports}}"
 
-	var (
-		stderr bytes.Buffer
-		stdout bytes.Buffer
-	)
-
-	command.Stderr = &stderr
-	command.Stdout = &stdout
-	if err := command.Run(); err != nil {
-		return nil, fmt.Errorf("list application packages: %w: %s", err, strings.TrimSpace(stderr.String()))
+	output, err := commandOutput(ctx, "go", "list", "-f", packageTemplate, "./internal/app/...")
+	if err != nil {
+		return nil, fmt.Errorf("list application packages: %w", err)
 	}
 
-	decoder := json.NewDecoder(&stdout)
+	return decodePackages(strings.NewReader(output))
+}
+
+func decodePackages(input io.Reader) ([]packageInfo, error) {
+	decoder := json.NewDecoder(input)
 	packages := make([]packageInfo, 0)
 
 	for {
 		var current packageInfo
-		if err := decoder.Decode(&current); err != nil {
+		if err := decoder.Decode(&current.ImportPath); err != nil {
 			if errors.Is(err, io.EOF) {
 				break
 			}
 
 			return nil, fmt.Errorf("decode application package: %w", err)
+		}
+
+		if err := decoder.Decode(&current.Imports); err != nil {
+			return nil, fmt.Errorf("decode application imports: %w", err)
 		}
 
 		packages = append(packages, current)
@@ -106,40 +122,54 @@ func listPackages(ctx context.Context) ([]packageInfo, error) {
 }
 
 func validatePackages(modulePath string, packages []packageInfo) []string {
-	violations := make([]string, 0)
+	violations := make([]string, 0, len(packages))
 
 	for _, current := range packages {
-		location, local, err := locate(modulePath, current.ImportPath)
-		if err != nil {
-			violations = append(violations, err.Error())
-
-			continue
-		}
-		if !local {
-			continue
-		}
-
-		for _, imported := range current.Imports {
-			target, targetLocal, targetErr := locate(modulePath, imported)
-			if targetErr != nil {
-				violations = append(violations, targetErr.Error())
-
-				continue
-			}
-			if !targetLocal || permits(location, target) {
-				continue
-			}
-
-			violations = append(
-				violations,
-				fmt.Sprintf("- %s (%s) must not import %s (%s)", current.ImportPath, location.layer, imported, target.layer),
-			)
-		}
+		violations = append(violations, validatePackage(modulePath, current)...)
 	}
 
 	sort.Strings(violations)
 
 	return violations
+}
+
+func validatePackage(modulePath string, current packageInfo) []string {
+	location, local, err := locate(modulePath, current.ImportPath)
+	if err != nil {
+		return []string{err.Error()}
+	}
+
+	if !local {
+		return nil
+	}
+
+	violations := make([]string, 0, len(current.Imports))
+
+	for _, imported := range current.Imports {
+		if violation := validateImport(modulePath, current.ImportPath, location, imported); violation != "" {
+			violations = append(violations, violation)
+		}
+	}
+
+	return violations
+}
+
+func validateImport(
+	modulePath string,
+	sourcePath string,
+	source packageLocation,
+	importPath string,
+) string {
+	target, local, err := locate(modulePath, importPath)
+	if err != nil {
+		return err.Error()
+	}
+
+	if !local || permits(source, target) {
+		return ""
+	}
+
+	return fmt.Sprintf("- %s (%s) must not import %s (%s)", sourcePath, source.layer, importPath, target.layer)
 }
 
 type packageLocation struct {
@@ -173,28 +203,40 @@ func locate(modulePath string, importPath string) (packageLocation, bool, error)
 		)
 	}
 
-	if (location.layer == "ports" || location.layer == "adapters") && len(parts) < 3 {
-		return packageLocation{}, true, fmt.Errorf(
-			"%w: %s must declare a concrete %s owner",
-			errInvalidLocation,
-			importPath,
-			location.layer,
-		)
+	owner, err := boundaryOwner(location.layer, parts, importPath)
+	if err != nil {
+		return packageLocation{}, true, err
 	}
-	if len(parts) >= 3 {
-		location.owner = parts[2]
-	}
+
+	location.owner = owner
 
 	return location, true, nil
 }
 
 func knownLayer(layer string) bool {
 	switch layer {
-	case "domain", "service", "ports", "adapters":
+	case layerDomain, layerService, layerPorts, layerAdapters:
 		return true
 	default:
 		return false
 	}
+}
+
+func boundaryOwner(layer string, parts []string, importPath string) (string, error) {
+	if layer != layerPorts && layer != layerAdapters {
+		return "", nil
+	}
+
+	if len(parts) < boundaryParts {
+		return "", fmt.Errorf(
+			"%w: %s must declare a concrete %s owner",
+			errInvalidLocation,
+			importPath,
+			layer,
+		)
+	}
+
+	return parts[boundaryOwnerIndex], nil
 }
 
 func permits(source packageLocation, target packageLocation) bool {
@@ -203,14 +245,21 @@ func permits(source packageLocation, target packageLocation) bool {
 	}
 
 	switch source.layer {
-	case "domain":
-		return target.layer == "domain"
-	case "service":
-		return target.layer == "domain" || target.layer == "service"
-	case "ports":
-		return target.layer == "domain" || target.layer == "service" || sameBoundary(source, target)
-	case "adapters":
-		return target.layer == "domain" || target.layer == "service" || sameBoundary(source, target)
+	case layerDomain:
+		return target.layer == layerDomain
+	case layerService:
+		return coreLayer(target.layer)
+	case layerPorts, layerAdapters:
+		return coreLayer(target.layer) || sameBoundary(source, target)
+	default:
+		return false
+	}
+}
+
+func coreLayer(layer string) bool {
+	switch layer {
+	case layerDomain, layerService:
+		return true
 	default:
 		return false
 	}

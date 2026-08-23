@@ -11,45 +11,7 @@ const testModule = "github.com/vixartech/example"
 func TestLocate(t *testing.T) {
 	t.Parallel()
 
-	tests := []struct {
-		name        string
-		importPath  string
-		expected    packageLocation
-		expectedApp bool
-		expectedErr error
-	}{
-		{
-			name:        "service package",
-			importPath:  testModule + "/internal/app/example/service/command",
-			expected:    packageLocation{service: "example", layer: "service", owner: "command"},
-			expectedApp: true,
-		},
-		{
-			name:        "adapter owner",
-			importPath:  testModule + "/internal/app/example/adapters/postgres/gen",
-			expected:    packageLocation{service: "example", layer: "adapters", owner: "postgres"},
-			expectedApp: true,
-		},
-		{name: "external package", importPath: "net/http"},
-		{
-			name:        "application root",
-			importPath:  testModule + "/internal/app/example",
-			expectedApp: true,
-			expectedErr: errInvalidLocation,
-		},
-		{
-			name:        "unknown layer",
-			importPath:  testModule + "/internal/app/example/runtime",
-			expectedApp: true,
-			expectedErr: errInvalidLocation,
-		},
-		{
-			name:        "ownerless adapter",
-			importPath:  testModule + "/internal/app/example/adapters",
-			expectedApp: true,
-			expectedErr: errInvalidLocation,
-		},
-	}
+	tests := append(validLocateCases(), invalidLocateCases()...)
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
@@ -59,9 +21,11 @@ func TestLocate(t *testing.T) {
 			if !errors.Is(err, test.expectedErr) {
 				t.Fatalf("locate(%q) error = %v, expected %v", test.importPath, err, test.expectedErr)
 			}
+
 			if actualApp != test.expectedApp {
 				t.Fatalf("locate(%q) application = %t, expected %t", test.importPath, actualApp, test.expectedApp)
 			}
+
 			if actual != test.expected {
 				t.Errorf("locate(%q) = %#v, expected %#v", test.importPath, actual, test.expected)
 			}
@@ -72,37 +36,7 @@ func TestLocate(t *testing.T) {
 func TestPermits(t *testing.T) {
 	t.Parallel()
 
-	tests := []struct {
-		name     string
-		source   packageLocation
-		target   packageLocation
-		expected bool
-	}{
-		{name: "domain to domain", source: location("domain", ""), target: location("domain", ""), expected: true},
-		{name: "domain to service", source: location("domain", ""), target: location("service", "")},
-		{name: "service to domain", source: location("service", ""), target: location("domain", ""), expected: true},
-		{name: "service to adapter", source: location("service", ""), target: location("adapters", "postgres")},
-		{name: "port to service", source: location("ports", "http"), target: location("service", ""), expected: true},
-		{name: "same port", source: location("ports", "http"), target: location("ports", "http"), expected: true},
-		{name: "sibling port", source: location("ports", "http"), target: location("ports", "grpc")},
-		{name: "adapter to service", source: location("adapters", "postgres"), target: location("service", ""), expected: true},
-		{
-			name:     "same adapter",
-			source:   location("adapters", "postgres"),
-			target:   location("adapters", "postgres"),
-			expected: true,
-		},
-		{
-			name:   "sibling adapter",
-			source: location("adapters", "postgres"),
-			target: location("adapters", "redis"),
-		},
-		{
-			name:   "other service",
-			source: location("service", ""),
-			target: packageLocation{service: "other", layer: "domain"},
-		},
-	}
+	tests := append(corePermissionCases(), boundaryPermissionCases()...)
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
@@ -119,34 +53,7 @@ func TestPermits(t *testing.T) {
 func TestValidatePackages(t *testing.T) {
 	t.Parallel()
 
-	tests := []struct {
-		name     string
-		packages []packageInfo
-		expected []string
-	}{
-		{
-			name: "valid service dependencies",
-			packages: []packageInfo{
-				{
-					ImportPath: testModule + "/internal/app/example/service",
-					Imports:    []string{testModule + "/internal/app/example/domain"},
-				},
-			},
-		},
-		{
-			name: "sibling adapter dependency",
-			packages: []packageInfo{
-				{
-					ImportPath: testModule + "/internal/app/example/adapters/postgres",
-					Imports:    []string{testModule + "/internal/app/example/adapters/redis"},
-				},
-			},
-			expected: []string{
-				"- github.com/vixartech/example/internal/app/example/adapters/postgres (adapters) must not import " +
-					"github.com/vixartech/example/internal/app/example/adapters/redis (adapters)",
-			},
-		},
-	}
+	tests := validationCases()
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
@@ -160,6 +67,137 @@ func TestValidatePackages(t *testing.T) {
 	}
 }
 
+type locateCase struct {
+	name        string
+	importPath  string
+	expected    packageLocation
+	expectedApp bool
+	expectedErr error
+}
+
+func validLocateCases() []locateCase {
+	return []locateCase{
+		{
+			name:        "service package",
+			importPath:  appPath("service/command"),
+			expected:    location(layerService, ""),
+			expectedApp: true,
+		},
+		{
+			name:        "adapter owner",
+			importPath:  appPath("adapters/postgres/gen"),
+			expected:    location(layerAdapters, "postgres"),
+			expectedApp: true,
+		},
+		{name: "external package", importPath: "net/http"},
+	}
+}
+
+func invalidLocateCases() []locateCase {
+	return []locateCase{
+		invalidLocateCase("application root", testModule+"/internal/app/example"),
+		invalidLocateCase("unknown layer", appPath("runtime")),
+		invalidLocateCase("ownerless adapter", appPath("adapters")),
+	}
+}
+
+func invalidLocateCase(name string, importPath string) locateCase {
+	return locateCase{
+		name:        name,
+		importPath:  importPath,
+		expectedApp: true,
+		expectedErr: errInvalidLocation,
+	}
+}
+
+type permissionCase struct {
+	name     string
+	source   packageLocation
+	target   packageLocation
+	expected bool
+}
+
+func corePermissionCases() []permissionCase {
+	return []permissionCase{
+		permission("domain to domain", layerDomain, "", layerDomain, "", true),
+		permission("domain to service", layerDomain, "", layerService, "", false),
+		permission("service to domain", layerService, "", layerDomain, "", true),
+		permission("service to adapter", layerService, "", layerAdapters, "postgres", false),
+	}
+}
+
+func boundaryPermissionCases() []permissionCase {
+	return []permissionCase{
+		permission("port to service", layerPorts, "http", layerService, "", true),
+		permission("same port", layerPorts, "http", layerPorts, "http", true),
+		permission("sibling port", layerPorts, "http", layerPorts, "grpc", false),
+		permission("adapter to service", layerAdapters, "postgres", layerService, "", true),
+		permission("same adapter", layerAdapters, "postgres", layerAdapters, "postgres", true),
+		permission("sibling adapter", layerAdapters, "postgres", layerAdapters, "redis", false),
+		{
+			name:   "other service",
+			source: location(layerService, ""),
+			target: packageLocation{service: "other", layer: layerDomain},
+		},
+	}
+}
+
+func permission(
+	name string,
+	sourceLayer string,
+	sourceOwner string,
+	targetLayer string,
+	targetOwner string,
+	expected bool,
+) permissionCase {
+	return permissionCase{
+		name:     name,
+		source:   location(sourceLayer, sourceOwner),
+		target:   location(targetLayer, targetOwner),
+		expected: expected,
+	}
+}
+
+type validationCase struct {
+	name     string
+	packages []packageInfo
+	expected []string
+}
+
+func validationCases() []validationCase {
+	return []validationCase{
+		{
+			name: "valid service dependencies",
+			packages: []packageInfo{
+				packageWithImport("service", "domain"),
+			},
+		},
+		{
+			name: "sibling adapter dependency",
+			packages: []packageInfo{
+				packageWithImport("adapters/postgres", "adapters/redis"),
+			},
+			expected: []string{siblingAdapterViolation()},
+		},
+	}
+}
+
+func packageWithImport(source string, target string) packageInfo {
+	return packageInfo{
+		ImportPath: appPath(source),
+		Imports:    []string{appPath(target)},
+	}
+}
+
+func siblingAdapterViolation() string {
+	return "- " + appPath("adapters/postgres") + " (adapters) must not import " +
+		appPath("adapters/redis") + " (adapters)"
+}
+
 func location(layer string, owner string) packageLocation {
 	return packageLocation{service: "example", layer: layer, owner: owner}
+}
+
+func appPath(suffix string) string {
+	return testModule + "/internal/app/example/" + suffix
 }
