@@ -8,7 +8,7 @@ go/vendor:
 	@go mod vendor
 
 .PHONY: go/generate
-go/generate: bin/easyjson
+go/generate: bin/easyjson bin/mockgen
 	@PATH="$(BIN_PATH):$$PATH" go generate ./...
 
 .PHONY: go/generate/http

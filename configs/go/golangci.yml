@@ -62,6 +62,7 @@ linters:
             - github.com/vixartech/gear
             - github.com/vixartech/gost/internal/app/gost/domain
             - github.com/vixartech/gost/internal/app/gost/service
+            - go.uber.org/mock
         id-service:
           files:
             - "**/id/internal/app/id/service/**/*.go"
@@ -72,6 +73,7 @@ linters:
             - github.com/vixartech/gear
             - github.com/vixartech/id/internal/app/id/domain
             - github.com/vixartech/id/internal/app/id/service
+            - go.uber.org/mock
         signal-service:
           files:
             - "**/signal/internal/app/signal/service/**/*.go"
@@ -81,6 +83,7 @@ linters:
             - github.com/vixartech/gear
             - github.com/vixartech/signal/internal/app/signal/domain
             - github.com/vixartech/signal/internal/app/signal/service
+            - go.uber.org/mock
         relay-service:
           files:
             - "**/relay/internal/app/relay/service/**/*.go"
@@ -90,6 +93,7 @@ linters:
             - github.com/vixartech/gear
             - github.com/vixartech/relay/internal/app/relay/domain
             - github.com/vixartech/relay/internal/app/relay/service
+            - go.uber.org/mock
         gost-ports:
           files:
             - "**/gost/internal/app/gost/ports/**/*.go"
