@@ -49,3 +49,14 @@ go/lint/proto/breaking: bin/buf
 .PHONY: go/test
 go/test:
 	@go test ./...
+
+.PHONY: go/test/race
+go/test/race:
+	@go test -race ./...
+
+.PHONY: go/test/cover
+go/test/cover:
+	@profile="$$(mktemp "$${TMPDIR:-/tmp}/vixar-go-cover.XXXXXX")"; \
+	trap 'rm -f "$$profile"' EXIT; \
+	go test -coverprofile="$$profile" ./...; \
+	go tool cover -func="$$profile"

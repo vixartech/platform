@@ -65,3 +65,7 @@ ts/next/start:
 .PHONY: ts/test/e2e
 ts/test/e2e:
 	@pnpm run test:e2e
+
+.PHONY: ts/test/unit
+ts/test/unit:
+	@pnpm exec vitest run src
