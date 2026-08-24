@@ -38,7 +38,8 @@ ENV API_URL=$API_URL \
 COPY --from=dependencies /app/node_modules ./node_modules
 COPY . .
 
-RUN pnpm exec next build
+RUN mkdir -p public \
+    && pnpm exec next build
 
 FROM node:24.19.0-alpine3.23 AS runtime
 
@@ -51,6 +52,7 @@ WORKDIR /app
 
 COPY --from=builder --chown=node:node /app/.next/standalone ./
 COPY --from=builder --chown=node:node /app/.next/static ./.next/static
+COPY --from=builder --chown=node:node /app/public ./public
 
 USER node
 
