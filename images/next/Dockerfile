@@ -4,6 +4,7 @@ WORKDIR /app
 
 RUN apk add --no-cache git openssh-client \
     && corepack enable \
+    && corepack install --global pnpm@10.28.2 \
     && printf '%s\n' \
     'github.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOMqqnkVzrm0SdG6UOoqKLsabgH5C9okWi0dh2l9GKJl' \
     > /etc/ssh/ssh_known_hosts
