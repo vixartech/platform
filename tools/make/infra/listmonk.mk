@@ -7,6 +7,10 @@ LISTMONK_ADMIN_PASSWORD ?= password
 LISTMONK_DB             ?= listmonk
 LISTMONK_SQL            ?= $(PLATFORM_DIR)/deployments/listmonk/sql/seed.sql
 
+LISTMONK_TEMPLATE_MIGRATIONS       ?= $(CURDIR)/migrations/listmonk
+LISTMONK_TEMPLATE_MIGRATIONS_TABLE ?= $(notdir $(CURDIR))_listmonk_schema_migrations
+LISTMONK_TEMPLATE_MIGRATION_DSN    ?= postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@localhost:$(POSTGRES_PORT)/$(LISTMONK_DB)?sslmode=disable&x-migrations-table=$(LISTMONK_TEMPLATE_MIGRATIONS_TABLE)
+
 export LISTMONK_IMAGE
 export LISTMONK_PORT
 export LISTMONK_ADMIN_USER
@@ -35,6 +39,14 @@ infra/listmonk/install: infra/listmonk/database
 .PHONY: infra/listmonk/seed
 infra/listmonk/seed: infra/listmonk/database
 	$(PLATFORM_COMPOSE) exec -T $(POSTGRES_SERVICE) psql -U "$$POSTGRES_USER" -d "$(LISTMONK_DB)" -v ON_ERROR_STOP=1 < "$(LISTMONK_SQL)"
+
+.PHONY: infra/listmonk/templates/migrate
+infra/listmonk/templates/migrate: bin/migrate
+	@$(BIN_PATH)/migrate -path "$(LISTMONK_TEMPLATE_MIGRATIONS)" -database "$(LISTMONK_TEMPLATE_MIGRATION_DSN)" up
+
+.PHONY: infra/listmonk/templates/rollback
+infra/listmonk/templates/rollback: bin/migrate
+	@$(BIN_PATH)/migrate -path "$(LISTMONK_TEMPLATE_MIGRATIONS)" -database "$(LISTMONK_TEMPLATE_MIGRATION_DSN)" down 1
 
 .PHONY: infra/listmonk/setup
 infra/listmonk/setup: infra/mailpit/up infra/listmonk/install infra/listmonk/up infra/listmonk/seed infra/listmonk/restart
