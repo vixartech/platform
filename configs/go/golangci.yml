@@ -74,6 +74,17 @@ linters:
             - github.com/vixartech/id/internal/app/id/domain
             - github.com/vixartech/id/internal/app/id/service
             - go.uber.org/mock
+        mironenko-service:
+          files:
+            - "**/mironenko/internal/app/mironenko/service/**/*.go"
+          list-mode: strict
+          allow:
+            - $gostd
+            - github.com/google/uuid
+            - github.com/vixartech/gear
+            - github.com/vixartech/mironenko/internal/app/mironenko/domain
+            - github.com/vixartech/mironenko/internal/app/mironenko/service
+            - go.uber.org/mock
         signal-service:
           files:
             - "**/signal/internal/app/signal/service/**/*.go"
@@ -122,6 +133,19 @@ linters:
             - github.com/vixartech/protocol
             - golang.org/x/oauth2
             - google.golang.org/protobuf
+        mironenko-ports:
+          files:
+            - "**/mironenko/internal/app/mironenko/ports/**/*.go"
+            - "!$test"
+          list-mode: strict
+          allow:
+            - $gostd
+            - github.com/google/uuid
+            - github.com/valyala/fasthttp
+            - github.com/vixartech/gear
+            - github.com/vixartech/mironenko/internal/app/mironenko/domain
+            - github.com/vixartech/mironenko/internal/app/mironenko/service
+            - github.com/vixartech/protocol
         signal-ports:
           files:
             - "**/signal/internal/app/signal/ports/**/*.go"
@@ -165,6 +189,19 @@ linters:
             - github.com/vixartech/protocol
             - golang.org/x/crypto
             - google.golang.org/protobuf
+        mironenko-adapters:
+          files:
+            - "**/mironenko/internal/app/mironenko/adapters/**/*.go"
+            - "!$test"
+          list-mode: strict
+          allow:
+            - $gostd
+            - github.com/google/uuid
+            - github.com/jackc/pgx
+            - github.com/vixartech/gear
+            - github.com/vixartech/mironenko/internal/app/mironenko/adapters/postgres/gen
+            - github.com/vixartech/mironenko/internal/app/mironenko/domain
+            - github.com/vixartech/mironenko/internal/app/mironenko/service
         signal-adapters:
           files:
             - "**/signal/internal/app/signal/adapters/**/*.go"
