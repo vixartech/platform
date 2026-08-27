@@ -6,7 +6,6 @@ export type SecurityHeader = {
 export type SecurityHeadersOptions = {
   development: boolean;
   cacheControl?: string;
-  connectSources?: readonly string[];
   imageSources?: readonly string[];
   referrerPolicy?: 'no-referrer' | 'strict-origin-when-cross-origin';
   strictTransportSecurity?: boolean;
@@ -46,7 +45,6 @@ function contentSecurityPolicy(options: SecurityHeadersOptions): string {
   const connectSources = [
     "'self'",
     ...(options.development ? ['http:', 'ws:'] : []),
-    ...(options.connectSources ?? []),
   ];
   const imageSources = ["'self'", 'data:', ...(options.imageSources ?? [])];
 
@@ -56,14 +54,10 @@ function contentSecurityPolicy(options: SecurityHeadersOptions): string {
     "form-action 'self'",
     "frame-ancestors 'none'",
     "object-src 'none'",
-    `connect-src ${unique(connectSources).join(' ')}`,
+    `connect-src ${connectSources.join(' ')}`,
     "font-src 'self' data:",
-    `img-src ${unique(imageSources).join(' ')}`,
+    `img-src ${imageSources.join(' ')}`,
     `script-src 'self' 'unsafe-inline'${options.development ? " 'unsafe-eval'" : ''}`,
     "style-src 'self' 'unsafe-inline'",
   ].join('; ');
-}
-
-function unique(values: readonly string[]): string[] {
-  return [...new Set(values)];
 }
