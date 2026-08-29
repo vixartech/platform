@@ -76,3 +76,7 @@ ts/test/e2e:
 .PHONY: ts/test/unit
 ts/test/unit:
 	@pnpm exec vitest run src
+
+.PHONY: ts/audit
+ts/audit:
+	@pnpm audit --prod

@@ -65,3 +65,7 @@ go/test/cover:
 	trap 'rm -f "$$profile"' EXIT; \
 	go test -coverprofile="$$profile" ./...; \
 	go tool cover -func="$$profile"
+
+.PHONY: go/vuln
+go/vuln: bin/govulncheck
+	@$(BIN_PATH)/govulncheck ./...

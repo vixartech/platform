@@ -5,6 +5,7 @@ MIGRATE_VERSION               ?= v4.19.1
 EASYJSON_VERSION              ?= v0.9.2
 OAPI_CODEGEN_VERSION          ?= v2.8.0
 GOLANGCI_LINT_VERSION         ?= v2.10.1
+GOVULNCHECK_VERSION           ?= v1.7.0
 MOCKGEN_VERSION               ?= v0.6.0
 SQLC_VERSION                  ?= v1.30.0
 PROTOC_GEN_GO_VERSION         ?= v1.36.11
@@ -41,6 +42,11 @@ bin/golangci-lint: $(BIN_PATH)/golangci-lint
 $(BIN_PATH)/golangci-lint: | $(BIN_PATH)
 	@wget -O - -q https://raw.githubusercontent.com/golangci/golangci-lint/$(GOLANGCI_LINT_VERSION)/install.sh | \
 		sh -s -- -b $(BIN_PATH) $(GOLANGCI_LINT_VERSION)
+
+bin/govulncheck: $(BIN_PATH)/govulncheck
+
+$(BIN_PATH)/govulncheck: | $(BIN_PATH)
+	@$(GOINSTALL) golang.org/x/vuln/cmd/govulncheck@$(GOVULNCHECK_VERSION)
 
 bin/mockgen: $(BIN_PATH)/mockgen
 
