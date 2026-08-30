@@ -1,6 +1,8 @@
-FROM golang:1.26.6-alpine3.24 AS builder
+FROM --platform=$BUILDPLATFORM golang:1.26.6-alpine3.24 AS builder
 
 ARG APP
+ARG TARGETARCH
+ARG TARGETOS
 
 WORKDIR /app
 
@@ -8,7 +10,7 @@ COPY . .
 
 # build app executable
 RUN --mount=type=cache,target=/root/.cache/go-build \
-    CGO_ENABLED=0 go build \
+    CGO_ENABLED=0 GOARCH=$TARGETARCH GOOS=$TARGETOS go build \
     -mod=vendor \
     -trimpath \
     -ldflags="-s -w -buildid=" \
