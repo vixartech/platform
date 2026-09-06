@@ -105,6 +105,15 @@ linters:
             - github.com/vixartech/relay/internal/app/relay/domain
             - github.com/vixartech/relay/internal/app/relay/service
             - go.uber.org/mock
+        srez-service:
+          files:
+            - "**/srez/internal/app/srez/service/**/*.go"
+          list-mode: strict
+          allow:
+            - $gostd
+            - github.com/vixartech/srez/internal/app/srez/domain
+            - github.com/vixartech/srez/internal/app/srez/service
+            - go.uber.org/mock
         gost-ports:
           files:
             - "**/gost/internal/app/gost/ports/**/*.go"
@@ -158,6 +167,16 @@ linters:
             - github.com/vixartech/signal/internal/app/signal/domain
             - github.com/vixartech/signal/internal/app/signal/service
             - google.golang.org/protobuf
+        srez-ports:
+          files:
+            - "**/srez/internal/app/srez/ports/**/*.go"
+            - "!$test"
+          list-mode: strict
+          allow:
+            - $gostd
+            - github.com/vixartech/gear
+            - github.com/vixartech/srez/internal/app/srez/domain
+            - github.com/vixartech/srez/internal/app/srez/service
         gost-adapters:
           files:
             - "**/gost/internal/app/gost/adapters/**/*.go"
@@ -223,6 +242,18 @@ linters:
             - github.com/vixartech/relay/internal/app/relay/adapters/postgres/gen
             - github.com/vixartech/relay/internal/app/relay/domain
             - github.com/vixartech/relay/internal/app/relay/service
+        srez-adapters:
+          files:
+            - "**/srez/internal/app/srez/adapters/**/*.go"
+            - "!$test"
+          list-mode: strict
+          allow:
+            - $gostd
+            - github.com/jackc/pgx
+            - github.com/vixartech/gear
+            - github.com/vixartech/srez/internal/app/srez/adapters/postgres/gen
+            - github.com/vixartech/srez/internal/app/srez/domain
+            - github.com/vixartech/srez/internal/app/srez/service
     dupl:
       threshold: 200
     errcheck:
