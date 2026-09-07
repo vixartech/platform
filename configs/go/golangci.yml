@@ -175,8 +175,10 @@ linters:
           allow:
             - $gostd
             - github.com/vixartech/gear
+            - github.com/vixartech/protocol
             - github.com/vixartech/srez/internal/app/srez/domain
             - github.com/vixartech/srez/internal/app/srez/service
+            - google.golang.org/grpc
         gost-adapters:
           files:
             - "**/gost/internal/app/gost/adapters/**/*.go"
