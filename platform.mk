@@ -18,6 +18,7 @@ include $(PLATFORM_DIR)/tools/make/infra/nginx.mk
 include $(PLATFORM_DIR)/tools/make/infra/loki.mk
 include $(PLATFORM_DIR)/tools/make/infra/alloy.mk
 include $(PLATFORM_DIR)/tools/make/infra/grafana.mk
+include $(PLATFORM_DIR)/tools/make/infra/queuemonitor.mk
 include $(PLATFORM_DIR)/tools/make/infra/common.mk
 
 include $(PLATFORM_DIR)/tools/make/go/build.mk
