@@ -280,6 +280,7 @@ linters:
           list-mode: strict
           allow:
             - $gostd
+            - golang.org/x/net/html
             - github.com/jackc/pgx
             - github.com/vixartech/gear
             - github.com/vixartech/srez/internal/app/srez/adapters/postgres/gen
