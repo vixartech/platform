@@ -11,7 +11,9 @@ RUN apk add --no-cache git openssh-client \
 
 FROM base AS dependencies
 
-COPY package.json pnpm-lock.yaml ./
+# Workspace packages and their manifests must exist when pnpm resolves workspace links.
+# Products own a restrictive .dockerignore so only build inputs enter this stage.
+COPY . .
 
 RUN --mount=type=cache,target=/root/.local/share/pnpm/store \
     --mount=type=ssh,required=true \

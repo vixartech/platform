@@ -63,6 +63,37 @@ linters:
             - github.com/vixartech/gost/internal/app/gost/domain
             - github.com/vixartech/gost/internal/app/gost/service
             - go.uber.org/mock
+        dozor-service:
+          files:
+            - "**/dozor/internal/app/dozor/service/**/*.go"
+          list-mode: strict
+          allow:
+            - $gostd
+            - github.com/vixartech/gear
+            - github.com/vixartech/dozor/internal/app/dozor/domain
+            - github.com/vixartech/dozor/internal/app/dozor/service
+            - go.uber.org/mock
+        dozor-ports:
+          files:
+            - "**/dozor/internal/app/dozor/ports/**/*.go"
+            - "!$test"
+          list-mode: strict
+          allow:
+            - $gostd
+            - github.com/vixartech/gear
+            - github.com/vixartech/protocol
+            - github.com/vixartech/dozor/internal/app/dozor/domain
+            - github.com/vixartech/dozor/internal/app/dozor/service
+        dozor-adapters:
+          files:
+            - "**/dozor/internal/app/dozor/adapters/**/*.go"
+            - "!$test"
+          list-mode: strict
+          allow:
+            - $gostd
+            - github.com/vixartech/gear
+            - github.com/vixartech/dozor/internal/app/dozor/domain
+            - github.com/vixartech/dozor/internal/app/dozor/service
         id-service:
           files:
             - "**/id/internal/app/id/service/**/*.go"
