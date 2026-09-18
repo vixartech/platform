@@ -172,6 +172,7 @@ linters:
             - github.com/vixartech/id/internal/app/id/service
             - github.com/vixartech/protocol
             - golang.org/x/oauth2
+            - google.golang.org/grpc
             - google.golang.org/protobuf
         mironenko-ports:
           files:
@@ -285,6 +286,7 @@ linters:
             - golang.org/x/net/html
             - github.com/jackc/pgx
             - github.com/vixartech/gear
+            - github.com/vixartech/protocol/gen/go/proto/id
             - github.com/vixartech/srez/internal/app/srez/adapters/postgres/gen
             - github.com/vixartech/srez/internal/app/srez/domain
             - github.com/vixartech/srez/internal/app/srez/service
