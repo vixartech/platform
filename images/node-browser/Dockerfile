@@ -1,7 +1,8 @@
 FROM node:24.19.0-alpine3.23 AS dependencies
 
 WORKDIR /app
-RUN apk add --no-cache git
+RUN apk add --no-cache git \
+    && git config --global url.https://github.com/.insteadOf git@github.com:
 RUN corepack enable && corepack install --global pnpm@10.28.2
 COPY package.json pnpm-lock.yaml ./
 RUN --mount=type=cache,target=/root/.local/share/pnpm/store \
