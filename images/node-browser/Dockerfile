@@ -2,7 +2,7 @@ FROM node:24.19.0-alpine3.23 AS dependencies
 
 WORKDIR /app
 RUN corepack enable && corepack install --global pnpm@10.28.2
-COPY package.json pnpm-lock.yaml ./
+COPY . .
 RUN --mount=type=cache,target=/root/.local/share/pnpm/store \
     pnpm install --prod --frozen-lockfile --ignore-scripts
 
