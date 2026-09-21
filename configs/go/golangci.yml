@@ -211,6 +211,7 @@ linters:
             - github.com/vixartech/srez/internal/app/srez/domain
             - github.com/vixartech/srez/internal/app/srez/service
             - google.golang.org/grpc
+            - google.golang.org/protobuf
         gost-adapters:
           files:
             - "**/gost/internal/app/gost/adapters/**/*.go"
