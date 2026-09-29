@@ -10,8 +10,8 @@ FROM node:24.19.0-alpine3.23
 
 ENV NODE_ENV=production
 WORKDIR /app
-RUN apk add --no-cache chromium ca-certificates
+RUN apk add --no-cache chromium ca-certificates tini=0.19.0-r3
 COPY --from=dependencies --chown=node:node /app/node_modules ./node_modules
 COPY --chown=node:node . .
 USER node
-ENTRYPOINT ["node"]
+ENTRYPOINT ["/sbin/tini", "-g", "--", "node"]
