@@ -11,6 +11,9 @@ RUN apk add --no-cache git openssh-client \
 
 FROM base AS dependencies
 
+ARG GITHUB_SSH_HOST=github.com
+ARG GITHUB_SSH_PORT=22
+
 # Workspace packages and their manifests must exist when pnpm resolves workspace links.
 # Products own a restrictive .dockerignore so only build inputs enter this stage.
 COPY . .
@@ -18,7 +21,7 @@ COPY . .
 RUN --mount=type=cache,target=/root/.local/share/pnpm/store \
     --mount=type=ssh,required=true \
     git config --global url."ssh://git@github.com/".insteadOf "https://github.com/" \
-    && GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=yes" \
+    && GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=yes -o HostKeyAlias=github.com -o Hostname=$GITHUB_SSH_HOST -p $GITHUB_SSH_PORT" \
     pnpm install --frozen-lockfile --ignore-scripts
 
 FROM base AS builder
