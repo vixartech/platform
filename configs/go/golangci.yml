@@ -288,6 +288,7 @@ linters:
             - github.com/jackc/pgx
             - github.com/vixartech/gear
             - github.com/vixartech/protocol/gen/go/proto/id
+            - github.com/vixartech/protocol/gen/go/http/srezml/v1
             - github.com/vixartech/srez/internal/app/srez/adapters/postgres/gen
             - github.com/vixartech/srez/internal/app/srez/domain
             - github.com/vixartech/srez/internal/app/srez/service
