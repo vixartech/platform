@@ -53,6 +53,9 @@ linters:
           allow:
             - $gostd
             - github.com/google/uuid$
+            # Pure HTML5 parsing for source-bound domain evidence; no HTTP clients.
+            - golang.org/x/net/html$
+            - golang.org/x/net/html/atom$
         gost-service:
           files:
             - "**/gost/internal/app/gost/service/**/*.go"
