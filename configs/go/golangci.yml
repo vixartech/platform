@@ -56,6 +56,8 @@ linters:
             # Pure HTML5 parsing for source-bound domain evidence; no HTTP clients.
             - golang.org/x/net/html$
             - golang.org/x/net/html/atom$
+            # Pure Unicode folding for source text keys; no transport or runtime dependencies.
+            - golang.org/x/text/cases$
         gost-service:
           files:
             - "**/gost/internal/app/gost/service/**/*.go"
