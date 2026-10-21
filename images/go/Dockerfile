@@ -1,6 +1,7 @@
 FROM --platform=$BUILDPLATFORM golang:1.26.10-alpine3.24 AS builder
 
 ARG APP
+ARG TOOLS
 ARG TARGETARCH
 ARG TARGETOS
 
@@ -15,7 +16,12 @@ RUN --mount=type=cache,target=/root/.cache/go-build \
     -trimpath \
     -ldflags="-s -w -buildid=" \
     -o /out/app \
-    ./cmd/$APP
+    ./cmd/$APP && \
+    for tool in $TOOLS; do \
+      CGO_ENABLED=0 GOARCH=$TARGETARCH GOOS=$TARGETOS go build \
+        -mod=vendor -trimpath -ldflags="-s -w -buildid=" \
+        -o "/out/$tool" "./cmd/$tool" || exit 1; \
+    done
 
 FROM alpine:3.24
 
@@ -28,7 +34,7 @@ RUN apk add --no-cache ca-certificates \
 
 WORKDIR /app
 
-COPY --from=builder /out/app app
+COPY --from=builder /out/ ./
 COPY configs configs
 
 USER app
