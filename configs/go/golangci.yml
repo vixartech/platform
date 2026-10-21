@@ -58,6 +58,268 @@ linters:
             - golang.org/x/net/html/atom$
             # Pure Unicode folding for source text keys; no transport or runtime dependencies.
             - golang.org/x/text/cases$
+        spidertower-service:
+          files:
+            - "**/internal/app/spidertower/service/**/*.go"
+          list-mode: strict
+          allow:
+            - $gostd
+            - github.com/vixartech/gear
+            - go.uber.org/mock
+            - github.com/vixartech/spidertower/internal/app/spidertower/domain
+            - github.com/vixartech/spidertower/internal/app/spidertower/service
+        spidertower-ports:
+          files:
+            - "**/internal/app/spidertower/ports/**/*.go"
+          list-mode: strict
+          allow:
+            - $gostd
+            - github.com/vixartech/gear
+            - go.uber.org/mock
+            - github.com/vixartech/spidertower/internal/app/spidertower/domain
+            - github.com/vixartech/spidertower/internal/app/spidertower/service
+            - github.com/vixartech/protocol
+            - google.golang.org/protobuf
+            - github.com/valyala/fasthttp
+        spidertower-adapters:
+          files:
+            - "**/internal/app/spidertower/adapters/**/*.go"
+          list-mode: strict
+          allow:
+            - $gostd
+            - github.com/vixartech/gear
+            - go.uber.org/mock
+            - github.com/vixartech/spidertower/internal/app/spidertower/domain
+            - github.com/vixartech/spidertower/internal/app/spidertower/service
+            - github.com/vixartech/protocol
+            - google.golang.org/protobuf
+            - github.com/jackc/pgx/v5
+            - github.com/vixartech/spidertower/internal/app/spidertower/adapters
+        spiderssr-service:
+          files:
+            - "**/internal/app/spiderssr/service/**/*.go"
+          list-mode: strict
+          allow:
+            - $gostd
+            - github.com/vixartech/gear
+            - go.uber.org/mock
+            - github.com/vixartech/spiderssr/internal/app/spiderssr/domain
+            - github.com/vixartech/spiderssr/internal/app/spiderssr/service
+        spiderssr-ports:
+          files:
+            - "**/internal/app/spiderssr/ports/**/*.go"
+          list-mode: strict
+          allow:
+            - $gostd
+            - github.com/vixartech/gear
+            - go.uber.org/mock
+            - github.com/vixartech/spiderssr/internal/app/spiderssr/domain
+            - github.com/vixartech/spiderssr/internal/app/spiderssr/service
+            - github.com/vixartech/protocol
+            - google.golang.org/protobuf
+            - github.com/valyala/fasthttp
+        spiderssr-adapters:
+          files:
+            - "**/internal/app/spiderssr/adapters/**/*.go"
+          list-mode: strict
+          allow:
+            - $gostd
+            - github.com/vixartech/gear
+            - go.uber.org/mock
+            - github.com/vixartech/spiderssr/internal/app/spiderssr/domain
+            - github.com/vixartech/spiderssr/internal/app/spiderssr/service
+            - github.com/vixartech/protocol
+            - google.golang.org/protobuf
+            - github.com/redis/go-redis/v9
+            - golang.org/x/net/html
+            - golang.org/x/net/idna
+            - github.com/temoto/robotstxt
+            - github.com/vixartech/spiderssr/internal/app/spiderssr/adapters
+        spiderspa-service:
+          files:
+            - "**/internal/app/spiderspa/service/**/*.go"
+          list-mode: strict
+          allow:
+            - $gostd
+            - github.com/vixartech/gear
+            - go.uber.org/mock
+            - github.com/vixartech/spiderspa/internal/app/spiderspa/domain
+            - github.com/vixartech/spiderspa/internal/app/spiderspa/service
+        spiderspa-ports:
+          files:
+            - "**/internal/app/spiderspa/ports/**/*.go"
+          list-mode: strict
+          allow:
+            - $gostd
+            - github.com/vixartech/gear
+            - go.uber.org/mock
+            - github.com/vixartech/spiderspa/internal/app/spiderspa/domain
+            - github.com/vixartech/spiderspa/internal/app/spiderspa/service
+            - github.com/vixartech/protocol
+            - google.golang.org/protobuf
+            - github.com/valyala/fasthttp
+        spiderspa-adapters:
+          files:
+            - "**/internal/app/spiderspa/adapters/**/*.go"
+          list-mode: strict
+          allow:
+            - $gostd
+            - github.com/vixartech/gear
+            - go.uber.org/mock
+            - github.com/vixartech/spiderspa/internal/app/spiderspa/domain
+            - github.com/vixartech/spiderspa/internal/app/spiderspa/service
+            - github.com/vixartech/protocol
+            - google.golang.org/protobuf
+            - github.com/redis/go-redis/v9
+            - github.com/chromedp
+            - github.com/vixartech/spiderspa/internal/app/spiderspa/adapters
+        htworker-service:
+          files:
+            - "**/internal/app/htworker/service/**/*.go"
+          list-mode: strict
+          allow:
+            - $gostd
+            - github.com/vixartech/gear
+            - go.uber.org/mock
+            - github.com/vixartech/htworker/internal/app/htworker/domain
+            - github.com/vixartech/htworker/internal/app/htworker/service
+        htworker-ports:
+          files:
+            - "**/internal/app/htworker/ports/**/*.go"
+          list-mode: strict
+          allow:
+            - $gostd
+            - github.com/vixartech/gear
+            - go.uber.org/mock
+            - github.com/vixartech/htworker/internal/app/htworker/domain
+            - github.com/vixartech/htworker/internal/app/htworker/service
+            - github.com/vixartech/protocol
+            - google.golang.org/protobuf
+            - github.com/valyala/fasthttp
+        htworker-adapters:
+          files:
+            - "**/internal/app/htworker/adapters/**/*.go"
+          list-mode: strict
+          allow:
+            - $gostd
+            - github.com/vixartech/gear
+            - go.uber.org/mock
+            - github.com/vixartech/htworker/internal/app/htworker/domain
+            - github.com/vixartech/htworker/internal/app/htworker/service
+            - github.com/vixartech/protocol
+            - google.golang.org/protobuf
+            - github.com/jackc/pgx/v5
+            - github.com/vixartech/htworker/internal/app/htworker/adapters
+        htindexer-service:
+          files:
+            - "**/internal/app/htindexer/service/**/*.go"
+          list-mode: strict
+          allow:
+            - $gostd
+            - github.com/vixartech/gear
+            - go.uber.org/mock
+            - github.com/vixartech/htindexer/internal/app/htindexer/domain
+            - github.com/vixartech/htindexer/internal/app/htindexer/service
+        htindexer-ports:
+          files:
+            - "**/internal/app/htindexer/ports/**/*.go"
+          list-mode: strict
+          allow:
+            - $gostd
+            - github.com/vixartech/gear
+            - go.uber.org/mock
+            - github.com/vixartech/htindexer/internal/app/htindexer/domain
+            - github.com/vixartech/htindexer/internal/app/htindexer/service
+            - github.com/vixartech/protocol
+            - google.golang.org/protobuf
+            - github.com/valyala/fasthttp
+        htindexer-adapters:
+          files:
+            - "**/internal/app/htindexer/adapters/**/*.go"
+          list-mode: strict
+          allow:
+            - $gostd
+            - github.com/vixartech/gear
+            - go.uber.org/mock
+            - github.com/vixartech/htindexer/internal/app/htindexer/domain
+            - github.com/vixartech/htindexer/internal/app/htindexer/service
+            - github.com/vixartech/protocol
+            - google.golang.org/protobuf
+            - github.com/jackc/pgx/v5
+            - github.com/vixartech/htindexer/internal/app/htindexer/adapters
+        htapi-service:
+          files:
+            - "**/internal/app/htapi/service/**/*.go"
+          list-mode: strict
+          allow:
+            - $gostd
+            - github.com/vixartech/gear
+            - go.uber.org/mock
+            - github.com/vixartech/htapi/internal/app/htapi/domain
+            - github.com/vixartech/htapi/internal/app/htapi/service
+        htapi-ports:
+          files:
+            - "**/internal/app/htapi/ports/**/*.go"
+          list-mode: strict
+          allow:
+            - $gostd
+            - github.com/vixartech/gear
+            - go.uber.org/mock
+            - github.com/vixartech/htapi/internal/app/htapi/domain
+            - github.com/vixartech/htapi/internal/app/htapi/service
+            - github.com/vixartech/protocol
+            - google.golang.org/protobuf
+            - github.com/valyala/fasthttp
+        htapi-adapters:
+          files:
+            - "**/internal/app/htapi/adapters/**/*.go"
+          list-mode: strict
+          allow:
+            - $gostd
+            - github.com/vixartech/gear
+            - go.uber.org/mock
+            - github.com/vixartech/htapi/internal/app/htapi/domain
+            - github.com/vixartech/htapi/internal/app/htapi/service
+            - github.com/vixartech/protocol
+            - google.golang.org/protobuf
+            - github.com/jackc/pgx/v5
+            - github.com/vixartech/htapi/internal/app/htapi/adapters
+        html-service:
+          files:
+            - "**/internal/app/html/service/**/*.go"
+          list-mode: strict
+          allow:
+            - $gostd
+            - github.com/vixartech/gear
+            - go.uber.org/mock
+            - github.com/vixartech/html/internal/app/html/domain
+            - github.com/vixartech/html/internal/app/html/service
+        html-ports:
+          files:
+            - "**/internal/app/html/ports/**/*.go"
+          list-mode: strict
+          allow:
+            - $gostd
+            - github.com/vixartech/gear
+            - go.uber.org/mock
+            - github.com/vixartech/html/internal/app/html/domain
+            - github.com/vixartech/html/internal/app/html/service
+            - github.com/vixartech/protocol
+            - google.golang.org/protobuf
+            - github.com/valyala/fasthttp
+        html-adapters:
+          files:
+            - "**/internal/app/html/adapters/**/*.go"
+          list-mode: strict
+          allow:
+            - $gostd
+            - github.com/vixartech/gear
+            - go.uber.org/mock
+            - github.com/vixartech/html/internal/app/html/domain
+            - github.com/vixartech/html/internal/app/html/service
+            - github.com/vixartech/protocol
+            - google.golang.org/protobuf
+            - github.com/vixartech/html/internal/app/html/adapters
         gost-service:
           files:
             - "**/gost/internal/app/gost/service/**/*.go"
