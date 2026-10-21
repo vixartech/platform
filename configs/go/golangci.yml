@@ -81,6 +81,7 @@ linters:
             - github.com/vixartech/protocol
             - google.golang.org/protobuf
             - github.com/valyala/fasthttp
+            - github.com/vixartech/spidertower/internal/app/spidertower/ports
         spidertower-adapters:
           files:
             - "**/internal/app/spidertower/adapters/**/*.go"
@@ -118,6 +119,7 @@ linters:
             - github.com/vixartech/protocol
             - google.golang.org/protobuf
             - github.com/valyala/fasthttp
+            - github.com/vixartech/spiderssr/internal/app/spiderssr/ports
         spiderssr-adapters:
           files:
             - "**/internal/app/spiderssr/adapters/**/*.go"
@@ -158,6 +160,7 @@ linters:
             - github.com/vixartech/protocol
             - google.golang.org/protobuf
             - github.com/valyala/fasthttp
+            - github.com/vixartech/spiderspa/internal/app/spiderspa/ports
         spiderspa-adapters:
           files:
             - "**/internal/app/spiderspa/adapters/**/*.go"
@@ -196,6 +199,7 @@ linters:
             - github.com/vixartech/protocol
             - google.golang.org/protobuf
             - github.com/valyala/fasthttp
+            - github.com/vixartech/htworker/internal/app/htworker/ports
         htworker-adapters:
           files:
             - "**/internal/app/htworker/adapters/**/*.go"
@@ -233,6 +237,7 @@ linters:
             - github.com/vixartech/protocol
             - google.golang.org/protobuf
             - github.com/valyala/fasthttp
+            - github.com/vixartech/htindexer/internal/app/htindexer/ports
         htindexer-adapters:
           files:
             - "**/internal/app/htindexer/adapters/**/*.go"
@@ -270,6 +275,7 @@ linters:
             - github.com/vixartech/protocol
             - google.golang.org/protobuf
             - github.com/valyala/fasthttp
+            - github.com/vixartech/htapi/internal/app/htapi/ports
         htapi-adapters:
           files:
             - "**/internal/app/htapi/adapters/**/*.go"
@@ -307,6 +313,7 @@ linters:
             - github.com/vixartech/protocol
             - google.golang.org/protobuf
             - github.com/valyala/fasthttp
+            - github.com/vixartech/html/internal/app/html/ports
         html-adapters:
           files:
             - "**/internal/app/html/adapters/**/*.go"
