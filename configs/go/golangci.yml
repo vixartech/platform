@@ -57,6 +57,8 @@ linters:
             # Pure HTML5 parsing for source-bound domain evidence; no HTTP clients.
             - golang.org/x/net/html$
             - golang.org/x/net/html/atom$
+            # Pure IDNA hostname canonicalization; no network transports or subpackages.
+            - golang.org/x/net/idna$
             # Pure Unicode folding for source text keys; no transport or runtime dependencies.
             - golang.org/x/text/cases$
         gost-query:

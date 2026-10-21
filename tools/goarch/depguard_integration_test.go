@@ -10,6 +10,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"runtime"
 	"strconv"
 	"strings"
 	"testing"
@@ -38,7 +39,8 @@ func TestQueryDepguard(t *testing.T) {
 			app := registered.app
 			root := filepath.Join(t.TempDir(), "arbitrary-checkout")
 			module := "github.com/vixartech/" + app
-			writeGuardFixture(t, root, "go.mod", "module "+module+"\n\ngo 1.26.5\n")
+			writeGuardFixture(t, root, "go.mod", "module "+module+"\n\ngo 1.26.5\n"+
+				"\nrequire golang.org/x/net v0.0.0\nreplace golang.org/x/net => ./xnet\n")
 			root, err = filepath.EvalSymlinks(root)
 			if err != nil {
 				t.Fatal(err)
@@ -81,11 +83,26 @@ func TestQueryDepguard(t *testing.T) {
 				writeGuardFixture(t, root, path, "package fixture\nimport _ "+strconv.Quote(fixture)+"\n")
 				expected[filepath.Join(root, filepath.FromSlash(path))] = file == "fixture.go" || app != "srez"
 			}
+			writeGuardFixture(t, root, "xnet/go.mod", "module golang.org/x/net\n\ngo 1.26.5\n")
+			for index, imported := range []string{"golang.org/x/net/idna", "golang.org/x/net/idna/subpkg", "golang.org/x/net/http2"} {
+				file := "internal/app/" + app + "/domain/external" + strconv.Itoa(index) + ".go"
+				writeGuardFixture(t, root, file, "package fixture\nimport _ "+strconv.Quote(imported)+"\n")
+				writeGuardFixture(t, root, "xnet/"+strings.TrimPrefix(imported, "golang.org/x/net/")+"/empty.go", "package fixture\n")
+				expected[filepath.Join(root, filepath.FromSlash(file))] = imported != "golang.org/x/net/idna"
+			}
+			fixtureEnv := append(os.Environ(), "GO111MODULE=on", "GOTOOLCHAIN=local", "GOPROXY=off", "GOSUMDB=off",
+				"PATH="+filepath.Join(runtime.GOROOT(), "bin")+string(os.PathListSeparator)+os.Getenv("PATH"))
+			vendor := exec.CommandContext(t.Context(), filepath.Join(runtime.GOROOT(), "bin", "go"), "mod", "vendor")
+			vendor.Dir = root
+			vendor.Env = fixtureEnv
+			if output, err := vendor.CombinedOutput(); err != nil {
+				t.Fatalf("vendor local guard fixture: %v, %s", err, output)
+			}
 
 			command := exec.CommandContext(t.Context(), linter, "run", "--config", config,
 				"--enable-only", "depguard", "--output.json.path=stdout", "--output.text.path=", "./...")
 			command.Dir = root
-			command.Env = append(os.Environ(), "GO111MODULE=on")
+			command.Env = fixtureEnv
 			var stderr bytes.Buffer
 			command.Stderr = &stderr
 			output, runErr := command.Output()
