@@ -19,6 +19,7 @@ import (
 const (
 	layerDomain   = "domain"
 	layerService  = "service"
+	layerQuery    = "query"
 	layerPorts    = "ports"
 	layerAdapters = "adapters"
 
@@ -211,7 +212,7 @@ func locate(modulePath string, importPath string) (packageLocation, bool, error)
 	parts := strings.Split(strings.TrimPrefix(importPath, prefix), "/")
 	if len(parts) < 2 {
 		return packageLocation{}, true, fmt.Errorf(
-			"%w: %s must be placed in domain, service, ports, or adapters",
+			"%w: %s must be placed in domain, service, query, ports, or adapters",
 			errInvalidLocation,
 			importPath,
 		)
@@ -239,7 +240,7 @@ func locate(modulePath string, importPath string) (packageLocation, bool, error)
 
 func knownLayer(layer string) bool {
 	switch layer {
-	case layerDomain, layerService, layerPorts, layerAdapters:
+	case layerDomain, layerService, layerQuery, layerPorts, layerAdapters:
 		return true
 	default:
 		return false
@@ -272,7 +273,9 @@ func permits(source packageLocation, target packageLocation) bool {
 	case layerDomain:
 		return target.layer == layerDomain
 	case layerService:
-		return coreLayer(target.layer)
+		return target.layer == layerDomain || target.layer == layerService
+	case layerQuery:
+		return target.layer == layerDomain || target.layer == layerQuery
 	case layerPorts, layerAdapters:
 		return coreLayer(target.layer) || sameBoundary(source, target)
 	default:
@@ -282,7 +285,7 @@ func permits(source packageLocation, target packageLocation) bool {
 
 func coreLayer(layer string) bool {
 	switch layer {
-	case layerDomain, layerService:
+	case layerDomain, layerService, layerQuery:
 		return true
 	default:
 		return false
