@@ -1,4 +1,4 @@
-FROM --platform=$BUILDPLATFORM golang:1.26.9-alpine3.24 AS builder
+FROM --platform=$BUILDPLATFORM golang:1.26.10-alpine3.24 AS builder
 
 ARG APP
 ARG TARGETARCH
