@@ -131,6 +131,24 @@ type locateCase struct {
 func validLocateCases() []locateCase {
 	return []locateCase{
 		{
+			name:        "existing service query package",
+			importPath:  appPath("service/query/problems"),
+			expected:    location(layerService, ""),
+			expectedApp: true,
+		},
+		{
+			name:        "query named transport helper",
+			importPath:  appPath("ports/http/query"),
+			expected:    location(layerPorts, "http"),
+			expectedApp: true,
+		},
+		{
+			name:        "nested query package",
+			importPath:  appPath("query/problems/window"),
+			expected:    location("query", ""),
+			expectedApp: true,
+		},
+		{
 			name:        "service package",
 			importPath:  appPath("service/command"),
 			expected:    location(layerService, ""),
@@ -151,6 +169,50 @@ func invalidLocateCases() []locateCase {
 		invalidLocateCase("application root", testModule+"/internal/app/example"),
 		invalidLocateCase("unknown layer", appPath("runtime")),
 		invalidLocateCase("ownerless adapter", appPath("adapters")),
+	}
+}
+
+func TestQueryImports(t *testing.T) {
+	t.Parallel()
+
+	for _, test := range queryImportCases() {
+		t.Run(test.name, func(t *testing.T) {
+			t.Parallel()
+
+			current := packageInfo{ImportPath: appPath(test.source), Imports: []string{test.target}}
+			actual := validatePackages(testModule, []packageInfo{current})
+			if (len(actual) == 0) != test.allowed {
+				t.Errorf("%s imports %s: violations = %q, expected allowed = %t",
+					current.ImportPath, test.target, actual, test.allowed)
+			}
+		})
+	}
+}
+
+type queryImportCase struct {
+	name, source, target string
+	allowed              bool
+}
+
+func queryImportCases() []queryImportCase {
+	return []queryImportCase{
+		{"query standard library", "query", "context", true},
+		{"query domain", "query", appPath("domain"), true},
+		{"nested query domain", "query/problems/window", appPath("domain/value"), true},
+		{"query query", "query/problems", appPath("query/source"), true},
+		{"port query", "ports/http", appPath("query"), true},
+		{"adapter query", "adapters/postgres", appPath("query"), true},
+		{"query service", "query", appPath("service"), false},
+		{"nested query command", "query/problems/window", appPath("service/command"), false},
+		{"query port", "query", appPath("ports/http"), false},
+		{"query adapter", "query/problems", appPath("adapters/postgres"), false},
+		{"domain query", "domain", appPath("query"), false},
+		{"service query", "service", appPath("query"), false},
+		{"query lookalike", "query", appPath("querying"), false},
+		{"service adapter", "service", appPath("adapters/postgres"), false},
+		{"query other app", "query", testModule + "/internal/app/other/domain", false},
+		{"query other query", "query/problems", testModule + "/internal/app/other/query", false},
+		{"port other query", "ports/http", testModule + "/internal/app/other/query", false},
 	}
 }
 

@@ -47,6 +47,7 @@ linters:
             - pkg: github.com/pkg/errors
         hexagonal-domain:
           files:
+            - "**/internal/app/*/domain/*.go"
             - "**/internal/app/*/domain/**/*.go"
             - "**/internal/app/spidertower/domain/*.go"
             - "**/internal/app/spiderssr/domain/*.go"
@@ -63,6 +64,8 @@ linters:
             # Pure HTML5 parsing for source-bound domain evidence; no HTTP clients.
             - golang.org/x/net/html$
             - golang.org/x/net/html/atom$
+            # Pure IDNA hostname canonicalization; no network transports or subpackages.
+            - golang.org/x/net/idna$
             # Pure Unicode folding for source text keys; no transport or runtime dependencies.
             - golang.org/x/text/cases$
         spidertower-service:
@@ -356,9 +359,94 @@ linters:
             - github.com/vixartech/protocol
             - google.golang.org/protobuf
             - github.com/vixartech/html/internal/app/html/adapters
+        gost-query:
+          files:
+            - "**/internal/app/gost/query/*.go"
+            - "**/internal/app/gost/query/**/*.go"
+            - "!$test"
+          list-mode: strict
+          allow:
+            - $gostd
+            - github.com/vixartech/gost/internal/app/gost/domain$
+            - github.com/vixartech/gost/internal/app/gost/domain/
+            - github.com/vixartech/gost/internal/app/gost/query$
+            - github.com/vixartech/gost/internal/app/gost/query/
+        dozor-query:
+          files:
+            - "**/internal/app/dozor/query/*.go"
+            - "**/internal/app/dozor/query/**/*.go"
+            - "!$test"
+          list-mode: strict
+          allow:
+            - $gostd
+            - github.com/vixartech/dozor/internal/app/dozor/domain$
+            - github.com/vixartech/dozor/internal/app/dozor/domain/
+            - github.com/vixartech/dozor/internal/app/dozor/query$
+            - github.com/vixartech/dozor/internal/app/dozor/query/
+        id-query:
+          files:
+            - "**/internal/app/id/query/*.go"
+            - "**/internal/app/id/query/**/*.go"
+            - "!$test"
+          list-mode: strict
+          allow:
+            - $gostd
+            - github.com/vixartech/id/internal/app/id/domain$
+            - github.com/vixartech/id/internal/app/id/domain/
+            - github.com/vixartech/id/internal/app/id/query$
+            - github.com/vixartech/id/internal/app/id/query/
+        mironenko-query:
+          files:
+            - "**/internal/app/mironenko/query/*.go"
+            - "**/internal/app/mironenko/query/**/*.go"
+            - "!$test"
+          list-mode: strict
+          allow:
+            - $gostd
+            - github.com/vixartech/mironenko/internal/app/mironenko/domain$
+            - github.com/vixartech/mironenko/internal/app/mironenko/domain/
+            - github.com/vixartech/mironenko/internal/app/mironenko/query$
+            - github.com/vixartech/mironenko/internal/app/mironenko/query/
+        signal-query:
+          files:
+            - "**/internal/app/signal/query/*.go"
+            - "**/internal/app/signal/query/**/*.go"
+            - "!$test"
+          list-mode: strict
+          allow:
+            - $gostd
+            - github.com/vixartech/signal/internal/app/signal/domain$
+            - github.com/vixartech/signal/internal/app/signal/domain/
+            - github.com/vixartech/signal/internal/app/signal/query$
+            - github.com/vixartech/signal/internal/app/signal/query/
+        relay-query:
+          files:
+            - "**/internal/app/relay/query/*.go"
+            - "**/internal/app/relay/query/**/*.go"
+            - "!$test"
+          list-mode: strict
+          allow:
+            - $gostd
+            - github.com/vixartech/relay/internal/app/relay/domain$
+            - github.com/vixartech/relay/internal/app/relay/domain/
+            - github.com/vixartech/relay/internal/app/relay/query$
+            - github.com/vixartech/relay/internal/app/relay/query/
+        srez-query:
+          files:
+            - "**/internal/app/srez/query/*.go"
+            - "**/internal/app/srez/query/**/*.go"
+            - "!$test"
+          list-mode: strict
+          allow:
+            - $gostd
+            - github.com/vixartech/srez/internal/app/srez/domain$
+            - github.com/vixartech/srez/internal/app/srez/domain/
+            - github.com/vixartech/srez/internal/app/srez/query$
+            - github.com/vixartech/srez/internal/app/srez/query/
         gost-service:
           files:
-            - "**/gost/internal/app/gost/service/**/*.go"
+            - "**/internal/app/gost/service/*.go"
+            - "**/internal/app/gost/service/**/*.go"
           list-mode: strict
           allow:
             - $gostd
@@ -368,7 +456,8 @@ linters:
             - go.uber.org/mock
         dozor-service:
           files:
-            - "**/dozor/internal/app/dozor/service/**/*.go"
+            - "**/internal/app/dozor/service/*.go"
+            - "**/internal/app/dozor/service/**/*.go"
           list-mode: strict
           allow:
             - $gostd
@@ -378,7 +467,7 @@ linters:
             - go.uber.org/mock
         dozor-ports:
           files:
-            - "**/dozor/internal/app/dozor/ports/**/*.go"
+            - "**/internal/app/dozor/ports/**/*.go"
             - "!$test"
           list-mode: strict
           allow:
@@ -387,9 +476,11 @@ linters:
             - github.com/vixartech/protocol
             - github.com/vixartech/dozor/internal/app/dozor/domain
             - github.com/vixartech/dozor/internal/app/dozor/service
+            - github.com/vixartech/dozor/internal/app/dozor/query$
+            - github.com/vixartech/dozor/internal/app/dozor/query/
         dozor-adapters:
           files:
-            - "**/dozor/internal/app/dozor/adapters/**/*.go"
+            - "**/internal/app/dozor/adapters/**/*.go"
             - "!$test"
           list-mode: strict
           allow:
@@ -397,9 +488,12 @@ linters:
             - github.com/vixartech/gear
             - github.com/vixartech/dozor/internal/app/dozor/domain
             - github.com/vixartech/dozor/internal/app/dozor/service
+            - github.com/vixartech/dozor/internal/app/dozor/query$
+            - github.com/vixartech/dozor/internal/app/dozor/query/
         id-service:
           files:
-            - "**/id/internal/app/id/service/**/*.go"
+            - "**/internal/app/id/service/*.go"
+            - "**/internal/app/id/service/**/*.go"
           list-mode: strict
           allow:
             - $gostd
@@ -410,7 +504,8 @@ linters:
             - go.uber.org/mock
         mironenko-service:
           files:
-            - "**/mironenko/internal/app/mironenko/service/**/*.go"
+            - "**/internal/app/mironenko/service/*.go"
+            - "**/internal/app/mironenko/service/**/*.go"
           list-mode: strict
           allow:
             - $gostd
@@ -421,7 +516,8 @@ linters:
             - go.uber.org/mock
         signal-service:
           files:
-            - "**/signal/internal/app/signal/service/**/*.go"
+            - "**/internal/app/signal/service/*.go"
+            - "**/internal/app/signal/service/**/*.go"
           list-mode: strict
           allow:
             - $gostd
@@ -431,7 +527,8 @@ linters:
             - go.uber.org/mock
         relay-service:
           files:
-            - "**/relay/internal/app/relay/service/**/*.go"
+            - "**/internal/app/relay/service/*.go"
+            - "**/internal/app/relay/service/**/*.go"
           list-mode: strict
           allow:
             - $gostd
@@ -441,16 +538,31 @@ linters:
             - go.uber.org/mock
         srez-service:
           files:
-            - "**/srez/internal/app/srez/service/**/*.go"
+            - "**/internal/app/srez/service/*.go"
+            - "**/internal/app/srez/service/**/*.go"
+            - "!$test"
           list-mode: strict
           allow:
             - $gostd
+            - github.com/google/uuid$
             - github.com/vixartech/srez/internal/app/srez/domain
             - github.com/vixartech/srez/internal/app/srez/service
             - go.uber.org/mock
+        srez-service-tests:
+          files:
+            - "**/internal/app/srez/service/*_test.go"
+            - "**/internal/app/srez/service/**/*_test.go"
+          list-mode: strict
+          allow:
+            - $gostd
+            - github.com/google/uuid$
+            - github.com/vixartech/srez/internal/app/srez/domain
+            - github.com/vixartech/srez/internal/app/srez/service
+            - github.com/vixartech/srez/internal/test/fixture$
+            - go.uber.org/mock
         gost-ports:
           files:
-            - "**/gost/internal/app/gost/ports/**/*.go"
+            - "**/internal/app/gost/ports/**/*.go"
             - "!$test"
           list-mode: strict
           allow:
@@ -459,9 +571,11 @@ linters:
             - github.com/vixartech/gost/internal/app/gost/domain
             - github.com/vixartech/gost/internal/app/gost/service
             - github.com/vixartech/protocol
+            - github.com/vixartech/gost/internal/app/gost/query$
+            - github.com/vixartech/gost/internal/app/gost/query/
         id-ports:
           files:
-            - "**/id/internal/app/id/ports/**/*.go"
+            - "**/internal/app/id/ports/**/*.go"
             - "!$test"
           list-mode: strict
           allow:
@@ -477,9 +591,11 @@ linters:
             - golang.org/x/oauth2
             - google.golang.org/grpc
             - google.golang.org/protobuf
+            - github.com/vixartech/id/internal/app/id/query$
+            - github.com/vixartech/id/internal/app/id/query/
         mironenko-ports:
           files:
-            - "**/mironenko/internal/app/mironenko/ports/**/*.go"
+            - "**/internal/app/mironenko/ports/**/*.go"
             - "!$test"
           list-mode: strict
           allow:
@@ -490,9 +606,11 @@ linters:
             - github.com/vixartech/mironenko/internal/app/mironenko/domain
             - github.com/vixartech/mironenko/internal/app/mironenko/service
             - github.com/vixartech/protocol
+            - github.com/vixartech/mironenko/internal/app/mironenko/query$
+            - github.com/vixartech/mironenko/internal/app/mironenko/query/
         signal-ports:
           files:
-            - "**/signal/internal/app/signal/ports/**/*.go"
+            - "**/internal/app/signal/ports/**/*.go"
             - "!$test"
           list-mode: strict
           allow:
@@ -502,9 +620,11 @@ linters:
             - github.com/vixartech/signal/internal/app/signal/domain
             - github.com/vixartech/signal/internal/app/signal/service
             - google.golang.org/protobuf
+            - github.com/vixartech/signal/internal/app/signal/query$
+            - github.com/vixartech/signal/internal/app/signal/query/
         srez-ports:
           files:
-            - "**/srez/internal/app/srez/ports/**/*.go"
+            - "**/internal/app/srez/ports/**/*.go"
             - "!$test"
           list-mode: strict
           allow:
@@ -515,9 +635,11 @@ linters:
             - github.com/vixartech/srez/internal/app/srez/service
             - google.golang.org/grpc
             - google.golang.org/protobuf
+            - github.com/vixartech/srez/internal/app/srez/query$
+            - github.com/vixartech/srez/internal/app/srez/query/
         gost-adapters:
           files:
-            - "**/gost/internal/app/gost/adapters/**/*.go"
+            - "**/internal/app/gost/adapters/**/*.go"
             - "!$test"
           list-mode: strict
           allow:
@@ -528,9 +650,11 @@ linters:
             - github.com/vixartech/gost/internal/app/gost/adapters/postgres/gen
             - github.com/vixartech/gost/internal/app/gost/domain
             - github.com/vixartech/gost/internal/app/gost/service
+            - github.com/vixartech/gost/internal/app/gost/query$
+            - github.com/vixartech/gost/internal/app/gost/query/
         id-adapters:
           files:
-            - "**/id/internal/app/id/adapters/**/*.go"
+            - "**/internal/app/id/adapters/**/*.go"
             - "!$test"
           list-mode: strict
           allow:
@@ -546,9 +670,11 @@ linters:
             - github.com/vixartech/protocol
             - golang.org/x/crypto
             - google.golang.org/protobuf
+            - github.com/vixartech/id/internal/app/id/query$
+            - github.com/vixartech/id/internal/app/id/query/
         mironenko-adapters:
           files:
-            - "**/mironenko/internal/app/mironenko/adapters/**/*.go"
+            - "**/internal/app/mironenko/adapters/**/*.go"
             - "!$test"
           list-mode: strict
           allow:
@@ -559,9 +685,11 @@ linters:
             - github.com/vixartech/mironenko/internal/app/mironenko/adapters/postgres/gen
             - github.com/vixartech/mironenko/internal/app/mironenko/domain
             - github.com/vixartech/mironenko/internal/app/mironenko/service
+            - github.com/vixartech/mironenko/internal/app/mironenko/query$
+            - github.com/vixartech/mironenko/internal/app/mironenko/query/
         signal-adapters:
           files:
-            - "**/signal/internal/app/signal/adapters/**/*.go"
+            - "**/internal/app/signal/adapters/**/*.go"
             - "!$test"
           list-mode: strict
           allow:
@@ -569,9 +697,11 @@ linters:
             - github.com/vixartech/gear
             - github.com/vixartech/signal/internal/app/signal/domain
             - github.com/vixartech/signal/internal/app/signal/service
+            - github.com/vixartech/signal/internal/app/signal/query$
+            - github.com/vixartech/signal/internal/app/signal/query/
         relay-adapters:
           files:
-            - "**/relay/internal/app/relay/adapters/**/*.go"
+            - "**/internal/app/relay/adapters/**/*.go"
             - "!$test"
           list-mode: strict
           allow:
@@ -580,9 +710,11 @@ linters:
             - github.com/vixartech/relay/internal/app/relay/adapters/postgres/gen
             - github.com/vixartech/relay/internal/app/relay/domain
             - github.com/vixartech/relay/internal/app/relay/service
+            - github.com/vixartech/relay/internal/app/relay/query$
+            - github.com/vixartech/relay/internal/app/relay/query/
         srez-adapters:
           files:
-            - "**/srez/internal/app/srez/adapters/**/*.go"
+            - "**/internal/app/srez/adapters/**/*.go"
             - "!$test"
           list-mode: strict
           allow:
@@ -600,6 +732,8 @@ linters:
             - github.com/vixartech/srez/internal/app/srez/adapters/postgres/gen
             - github.com/vixartech/srez/internal/app/srez/domain
             - github.com/vixartech/srez/internal/app/srez/service
+            - github.com/vixartech/srez/internal/app/srez/query$
+            - github.com/vixartech/srez/internal/app/srez/query/
     dupl:
       threshold: 200
     errcheck:
