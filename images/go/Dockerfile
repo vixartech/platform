@@ -44,14 +44,28 @@ EXPOSE 8080 50051
 ENTRYPOINT ["./app"]
 
 # The explicit browser target is used only by services that render web pages.
-FROM runtime AS browser
+FROM debian:13-slim@sha256:62bd423aeee912639ca8ee681c2b762cb3e25137e0a92b20be455898a9f034ad AS browser
 
-USER root
-RUN apk add --no-cache chromium=155.0.8059.84-r0 tini=0.19.0-r3
+RUN apt-get update \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        ca-certificates \
+        chromium=155.0.8059.79-1~deb13u1 \
+        chromium-common=155.0.8059.79-1~deb13u1 \
+        tini=0.19.0-3+b8 \
+    && rm -rf /var/lib/apt/lists/* \
+    && groupadd --system --gid 1001 app \
+    && useradd --uid 1001 --gid app --create-home --shell /usr/sbin/nologin app
+
+WORKDIR /app
+COPY --from=builder /out/ ./
+COPY configs configs
+
 ENV XDG_CONFIG_HOME=/tmp/chromium/config \
-    XDG_CACHE_HOME=/tmp/chromium/cache
+    XDG_CACHE_HOME=/tmp/chromium/cache \
+    XDG_DATA_HOME=/tmp/chromium/data
 USER app
-ENTRYPOINT ["/sbin/tini", "-g", "--", "./app"]
+EXPOSE 8080 50051
+ENTRYPOINT ["/usr/bin/tini", "-g", "--", "./app"]
 
 # Preserve the existing default image for ordinary Go services.
 FROM runtime AS app
