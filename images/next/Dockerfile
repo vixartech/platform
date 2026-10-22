@@ -27,6 +27,7 @@ RUN --mount=type=cache,target=/root/.local/share/pnpm/store \
 FROM base AS builder
 
 ARG API_URL
+ARG NEXT_BUILD_FLAGS
 ARG ID_API_URL
 ARG NEXT_PUBLIC_ID_API_BASE_PATH
 ARG NEXT_PUBLIC_ID_OAUTH_BASE_URL
@@ -45,7 +46,7 @@ COPY --from=dependencies /app/node_modules ./node_modules
 COPY . .
 
 RUN mkdir -p public \
-    && pnpm exec next build
+    && pnpm exec next build $NEXT_BUILD_FLAGS
 
 FROM node:24.19.0-alpine3.23 AS runtime
 

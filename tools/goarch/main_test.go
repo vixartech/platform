@@ -180,6 +180,7 @@ func TestQueryImports(t *testing.T) {
 			t.Parallel()
 
 			current := packageInfo{ImportPath: appPath(test.source), Imports: []string{test.target}}
+
 			actual := validatePackages(testModule, []packageInfo{current})
 			if (len(actual) == 0) != test.allowed {
 				t.Errorf("%s imports %s: violations = %q, expected allowed = %t",
@@ -199,7 +200,7 @@ func queryImportCases() []queryImportCase {
 		{"query standard library", "query", "context", true},
 		{"query domain", "query", appPath("domain"), true},
 		{"nested query domain", "query/problems/window", appPath("domain/value"), true},
-		{"query query", "query/problems", appPath("query/source"), true},
+		{"query sibling", "query/problems", appPath("query/source"), true},
 		{"port query", "ports/http", appPath("query"), true},
 		{"adapter query", "adapters/postgres", appPath("query"), true},
 		{"query service", "query", appPath("service"), false},

@@ -1,4 +1,5 @@
 TS_DEV_PORT  ?= 3001
+TS_NEXT_BUILD_FLAGS ?=
 
 .PHONY: ts/install
 ts/install:
@@ -56,7 +57,7 @@ ts/build:
 
 .PHONY: ts/next/build
 ts/next/build:
-	@pnpm exec next build
+	@pnpm exec next build $(TS_NEXT_BUILD_FLAGS)
 
 .PHONY: ts/next/start
 ts/next/start:

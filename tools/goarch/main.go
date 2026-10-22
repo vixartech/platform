@@ -269,13 +269,15 @@ func permits(source packageLocation, target packageLocation) bool {
 		return false
 	}
 
+	return permitsLayer(source, target)
+}
+
+func permitsLayer(source packageLocation, target packageLocation) bool {
 	switch source.layer {
 	case layerDomain:
 		return target.layer == layerDomain
-	case layerService:
-		return target.layer == layerDomain || target.layer == layerService
-	case layerQuery:
-		return target.layer == layerDomain || target.layer == layerQuery
+	case layerService, layerQuery:
+		return target.layer == layerDomain || target.layer == source.layer
 	case layerPorts, layerAdapters:
 		return coreLayer(target.layer) || sameBoundary(source, target)
 	default:
