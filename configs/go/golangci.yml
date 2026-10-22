@@ -48,6 +48,13 @@ linters:
         hexagonal-domain:
           files:
             - "**/internal/app/*/domain/**/*.go"
+            - "**/internal/app/spidertower/domain/*.go"
+            - "**/internal/app/spiderssr/domain/*.go"
+            - "**/internal/app/spiderspa/domain/*.go"
+            - "**/internal/app/htworker/domain/*.go"
+            - "**/internal/app/htapi/domain/*.go"
+            - "**/internal/app/htindexer/domain/*.go"
+            - "**/internal/app/html/domain/*.go"
             - "!$test"
           list-mode: strict
           allow:
@@ -61,6 +68,7 @@ linters:
         spidertower-service:
           files:
             - "**/internal/app/spidertower/service/**/*.go"
+            - "**/internal/app/spidertower/service/*.go"
           list-mode: strict
           allow:
             - $gostd
@@ -71,6 +79,7 @@ linters:
         spidertower-ports:
           files:
             - "**/internal/app/spidertower/ports/**/*.go"
+            - "**/internal/app/spidertower/ports/*.go"
           list-mode: strict
           allow:
             - $gostd
@@ -85,6 +94,7 @@ linters:
         spidertower-adapters:
           files:
             - "**/internal/app/spidertower/adapters/**/*.go"
+            - "**/internal/app/spidertower/adapters/*.go"
           list-mode: strict
           allow:
             - $gostd
@@ -99,6 +109,7 @@ linters:
         spiderssr-service:
           files:
             - "**/internal/app/spiderssr/service/**/*.go"
+            - "**/internal/app/spiderssr/service/*.go"
           list-mode: strict
           allow:
             - $gostd
@@ -109,6 +120,7 @@ linters:
         spiderssr-ports:
           files:
             - "**/internal/app/spiderssr/ports/**/*.go"
+            - "**/internal/app/spiderssr/ports/*.go"
           list-mode: strict
           allow:
             - $gostd
@@ -123,6 +135,7 @@ linters:
         spiderssr-adapters:
           files:
             - "**/internal/app/spiderssr/adapters/**/*.go"
+            - "**/internal/app/spiderssr/adapters/*.go"
           list-mode: strict
           allow:
             - $gostd
@@ -140,6 +153,7 @@ linters:
         spiderspa-service:
           files:
             - "**/internal/app/spiderspa/service/**/*.go"
+            - "**/internal/app/spiderspa/service/*.go"
           list-mode: strict
           allow:
             - $gostd
@@ -150,6 +164,7 @@ linters:
         spiderspa-ports:
           files:
             - "**/internal/app/spiderspa/ports/**/*.go"
+            - "**/internal/app/spiderspa/ports/*.go"
           list-mode: strict
           allow:
             - $gostd
@@ -164,6 +179,7 @@ linters:
         spiderspa-adapters:
           files:
             - "**/internal/app/spiderspa/adapters/**/*.go"
+            - "**/internal/app/spiderspa/adapters/*.go"
           list-mode: strict
           allow:
             - $gostd
@@ -175,10 +191,12 @@ linters:
             - google.golang.org/protobuf
             - github.com/redis/go-redis/v9
             - github.com/chromedp
+            - github.com/temoto/robotstxt
             - github.com/vixartech/spiderspa/internal/app/spiderspa/adapters
         htworker-service:
           files:
             - "**/internal/app/htworker/service/**/*.go"
+            - "**/internal/app/htworker/service/*.go"
           list-mode: strict
           allow:
             - $gostd
@@ -189,6 +207,7 @@ linters:
         htworker-ports:
           files:
             - "**/internal/app/htworker/ports/**/*.go"
+            - "**/internal/app/htworker/ports/*.go"
           list-mode: strict
           allow:
             - $gostd
@@ -203,6 +222,7 @@ linters:
         htworker-adapters:
           files:
             - "**/internal/app/htworker/adapters/**/*.go"
+            - "**/internal/app/htworker/adapters/*.go"
           list-mode: strict
           allow:
             - $gostd
@@ -217,6 +237,7 @@ linters:
         htindexer-service:
           files:
             - "**/internal/app/htindexer/service/**/*.go"
+            - "**/internal/app/htindexer/service/*.go"
           list-mode: strict
           allow:
             - $gostd
@@ -227,6 +248,7 @@ linters:
         htindexer-ports:
           files:
             - "**/internal/app/htindexer/ports/**/*.go"
+            - "**/internal/app/htindexer/ports/*.go"
           list-mode: strict
           allow:
             - $gostd
@@ -241,6 +263,7 @@ linters:
         htindexer-adapters:
           files:
             - "**/internal/app/htindexer/adapters/**/*.go"
+            - "**/internal/app/htindexer/adapters/*.go"
           list-mode: strict
           allow:
             - $gostd
@@ -255,6 +278,7 @@ linters:
         htapi-service:
           files:
             - "**/internal/app/htapi/service/**/*.go"
+            - "**/internal/app/htapi/service/*.go"
           list-mode: strict
           allow:
             - $gostd
@@ -265,6 +289,7 @@ linters:
         htapi-ports:
           files:
             - "**/internal/app/htapi/ports/**/*.go"
+            - "**/internal/app/htapi/ports/*.go"
           list-mode: strict
           allow:
             - $gostd
@@ -279,6 +304,7 @@ linters:
         htapi-adapters:
           files:
             - "**/internal/app/htapi/adapters/**/*.go"
+            - "**/internal/app/htapi/adapters/*.go"
           list-mode: strict
           allow:
             - $gostd
@@ -293,6 +319,7 @@ linters:
         html-service:
           files:
             - "**/internal/app/html/service/**/*.go"
+            - "**/internal/app/html/service/*.go"
           list-mode: strict
           allow:
             - $gostd
@@ -303,6 +330,7 @@ linters:
         html-ports:
           files:
             - "**/internal/app/html/ports/**/*.go"
+            - "**/internal/app/html/ports/*.go"
           list-mode: strict
           allow:
             - $gostd
@@ -317,6 +345,7 @@ linters:
         html-adapters:
           files:
             - "**/internal/app/html/adapters/**/*.go"
+            - "**/internal/app/html/adapters/*.go"
           list-mode: strict
           allow:
             - $gostd
