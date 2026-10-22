@@ -68,17 +68,32 @@ linters:
             - golang.org/x/net/idna$
             # Pure Unicode folding for source text keys; no transport or runtime dependencies.
             - golang.org/x/text/cases$
-        spidertower-service:
+        spidertower-command:
           files:
-            - "**/internal/app/spidertower/service/**/*.go"
-            - "**/internal/app/spidertower/service/*.go"
+            - "**/internal/app/spidertower/service/command/*.go"
+            - "**/internal/app/spidertower/service/command/**/*.go"
           list-mode: strict
           allow:
             - $gostd
             - github.com/vixartech/gear
             - go.uber.org/mock
-            - github.com/vixartech/spidertower/internal/app/spidertower/domain
-            - github.com/vixartech/spidertower/internal/app/spidertower/service
+            - github.com/vixartech/spidertower/internal/app/spidertower/domain$
+            - github.com/vixartech/spidertower/internal/app/spidertower/domain/
+            - github.com/vixartech/spidertower/internal/app/spidertower/service/command$
+            - github.com/vixartech/spidertower/internal/app/spidertower/service/command/
+        spidertower-query:
+          files:
+            - "**/internal/app/spidertower/service/query/*.go"
+            - "**/internal/app/spidertower/service/query/**/*.go"
+          list-mode: strict
+          allow:
+            - $gostd
+            - github.com/vixartech/gear
+            - go.uber.org/mock
+            - github.com/vixartech/spidertower/internal/app/spidertower/domain$
+            - github.com/vixartech/spidertower/internal/app/spidertower/domain/
+            - github.com/vixartech/spidertower/internal/app/spidertower/service/query$
+            - github.com/vixartech/spidertower/internal/app/spidertower/service/query/
         spidertower-ports:
           files:
             - "**/internal/app/spidertower/ports/**/*.go"
@@ -109,17 +124,32 @@ linters:
             - google.golang.org/protobuf
             - github.com/jackc/pgx/v5
             - github.com/vixartech/spidertower/internal/app/spidertower/adapters
-        spiderssr-service:
+        spiderssr-command:
           files:
-            - "**/internal/app/spiderssr/service/**/*.go"
-            - "**/internal/app/spiderssr/service/*.go"
+            - "**/internal/app/spiderssr/service/command/*.go"
+            - "**/internal/app/spiderssr/service/command/**/*.go"
           list-mode: strict
           allow:
             - $gostd
             - github.com/vixartech/gear
             - go.uber.org/mock
-            - github.com/vixartech/spiderssr/internal/app/spiderssr/domain
-            - github.com/vixartech/spiderssr/internal/app/spiderssr/service
+            - github.com/vixartech/spiderssr/internal/app/spiderssr/domain$
+            - github.com/vixartech/spiderssr/internal/app/spiderssr/domain/
+            - github.com/vixartech/spiderssr/internal/app/spiderssr/service/command$
+            - github.com/vixartech/spiderssr/internal/app/spiderssr/service/command/
+        spiderssr-query:
+          files:
+            - "**/internal/app/spiderssr/service/query/*.go"
+            - "**/internal/app/spiderssr/service/query/**/*.go"
+          list-mode: strict
+          allow:
+            - $gostd
+            - github.com/vixartech/gear
+            - go.uber.org/mock
+            - github.com/vixartech/spiderssr/internal/app/spiderssr/domain$
+            - github.com/vixartech/spiderssr/internal/app/spiderssr/domain/
+            - github.com/vixartech/spiderssr/internal/app/spiderssr/service/query$
+            - github.com/vixartech/spiderssr/internal/app/spiderssr/service/query/
         spiderssr-ports:
           files:
             - "**/internal/app/spiderssr/ports/**/*.go"
@@ -153,17 +183,32 @@ linters:
             - golang.org/x/net/idna
             - github.com/temoto/robotstxt
             - github.com/vixartech/spiderssr/internal/app/spiderssr/adapters
-        spiderspa-service:
+        spiderspa-command:
           files:
-            - "**/internal/app/spiderspa/service/**/*.go"
-            - "**/internal/app/spiderspa/service/*.go"
+            - "**/internal/app/spiderspa/service/command/*.go"
+            - "**/internal/app/spiderspa/service/command/**/*.go"
           list-mode: strict
           allow:
             - $gostd
             - github.com/vixartech/gear
             - go.uber.org/mock
-            - github.com/vixartech/spiderspa/internal/app/spiderspa/domain
-            - github.com/vixartech/spiderspa/internal/app/spiderspa/service
+            - github.com/vixartech/spiderspa/internal/app/spiderspa/domain$
+            - github.com/vixartech/spiderspa/internal/app/spiderspa/domain/
+            - github.com/vixartech/spiderspa/internal/app/spiderspa/service/command$
+            - github.com/vixartech/spiderspa/internal/app/spiderspa/service/command/
+        spiderspa-query:
+          files:
+            - "**/internal/app/spiderspa/service/query/*.go"
+            - "**/internal/app/spiderspa/service/query/**/*.go"
+          list-mode: strict
+          allow:
+            - $gostd
+            - github.com/vixartech/gear
+            - go.uber.org/mock
+            - github.com/vixartech/spiderspa/internal/app/spiderspa/domain$
+            - github.com/vixartech/spiderspa/internal/app/spiderspa/domain/
+            - github.com/vixartech/spiderspa/internal/app/spiderspa/service/query$
+            - github.com/vixartech/spiderspa/internal/app/spiderspa/service/query/
         spiderspa-ports:
           files:
             - "**/internal/app/spiderspa/ports/**/*.go"
@@ -196,17 +241,32 @@ linters:
             - github.com/chromedp
             - github.com/temoto/robotstxt
             - github.com/vixartech/spiderspa/internal/app/spiderspa/adapters
-        htworker-service:
+        htworker-command:
           files:
-            - "**/internal/app/htworker/service/**/*.go"
-            - "**/internal/app/htworker/service/*.go"
+            - "**/internal/app/htworker/service/command/*.go"
+            - "**/internal/app/htworker/service/command/**/*.go"
           list-mode: strict
           allow:
             - $gostd
             - github.com/vixartech/gear
             - go.uber.org/mock
-            - github.com/vixartech/htworker/internal/app/htworker/domain
-            - github.com/vixartech/htworker/internal/app/htworker/service
+            - github.com/vixartech/htworker/internal/app/htworker/domain$
+            - github.com/vixartech/htworker/internal/app/htworker/domain/
+            - github.com/vixartech/htworker/internal/app/htworker/service/command$
+            - github.com/vixartech/htworker/internal/app/htworker/service/command/
+        htworker-query:
+          files:
+            - "**/internal/app/htworker/service/query/*.go"
+            - "**/internal/app/htworker/service/query/**/*.go"
+          list-mode: strict
+          allow:
+            - $gostd
+            - github.com/vixartech/gear
+            - go.uber.org/mock
+            - github.com/vixartech/htworker/internal/app/htworker/domain$
+            - github.com/vixartech/htworker/internal/app/htworker/domain/
+            - github.com/vixartech/htworker/internal/app/htworker/service/query$
+            - github.com/vixartech/htworker/internal/app/htworker/service/query/
         htworker-ports:
           files:
             - "**/internal/app/htworker/ports/**/*.go"
@@ -237,17 +297,32 @@ linters:
             - google.golang.org/protobuf
             - github.com/jackc/pgx/v5
             - github.com/vixartech/htworker/internal/app/htworker/adapters
-        htindexer-service:
+        htindexer-command:
           files:
-            - "**/internal/app/htindexer/service/**/*.go"
-            - "**/internal/app/htindexer/service/*.go"
+            - "**/internal/app/htindexer/service/command/*.go"
+            - "**/internal/app/htindexer/service/command/**/*.go"
           list-mode: strict
           allow:
             - $gostd
             - github.com/vixartech/gear
             - go.uber.org/mock
-            - github.com/vixartech/htindexer/internal/app/htindexer/domain
-            - github.com/vixartech/htindexer/internal/app/htindexer/service
+            - github.com/vixartech/htindexer/internal/app/htindexer/domain$
+            - github.com/vixartech/htindexer/internal/app/htindexer/domain/
+            - github.com/vixartech/htindexer/internal/app/htindexer/service/command$
+            - github.com/vixartech/htindexer/internal/app/htindexer/service/command/
+        htindexer-query:
+          files:
+            - "**/internal/app/htindexer/service/query/*.go"
+            - "**/internal/app/htindexer/service/query/**/*.go"
+          list-mode: strict
+          allow:
+            - $gostd
+            - github.com/vixartech/gear
+            - go.uber.org/mock
+            - github.com/vixartech/htindexer/internal/app/htindexer/domain$
+            - github.com/vixartech/htindexer/internal/app/htindexer/domain/
+            - github.com/vixartech/htindexer/internal/app/htindexer/service/query$
+            - github.com/vixartech/htindexer/internal/app/htindexer/service/query/
         htindexer-ports:
           files:
             - "**/internal/app/htindexer/ports/**/*.go"
@@ -278,17 +353,32 @@ linters:
             - google.golang.org/protobuf
             - github.com/jackc/pgx/v5
             - github.com/vixartech/htindexer/internal/app/htindexer/adapters
-        htapi-service:
+        htapi-command:
           files:
-            - "**/internal/app/htapi/service/**/*.go"
-            - "**/internal/app/htapi/service/*.go"
+            - "**/internal/app/htapi/service/command/*.go"
+            - "**/internal/app/htapi/service/command/**/*.go"
           list-mode: strict
           allow:
             - $gostd
             - github.com/vixartech/gear
             - go.uber.org/mock
-            - github.com/vixartech/htapi/internal/app/htapi/domain
-            - github.com/vixartech/htapi/internal/app/htapi/service
+            - github.com/vixartech/htapi/internal/app/htapi/domain$
+            - github.com/vixartech/htapi/internal/app/htapi/domain/
+            - github.com/vixartech/htapi/internal/app/htapi/service/command$
+            - github.com/vixartech/htapi/internal/app/htapi/service/command/
+        htapi-query:
+          files:
+            - "**/internal/app/htapi/service/query/*.go"
+            - "**/internal/app/htapi/service/query/**/*.go"
+          list-mode: strict
+          allow:
+            - $gostd
+            - github.com/vixartech/gear
+            - go.uber.org/mock
+            - github.com/vixartech/htapi/internal/app/htapi/domain$
+            - github.com/vixartech/htapi/internal/app/htapi/domain/
+            - github.com/vixartech/htapi/internal/app/htapi/service/query$
+            - github.com/vixartech/htapi/internal/app/htapi/service/query/
         htapi-ports:
           files:
             - "**/internal/app/htapi/ports/**/*.go"
@@ -319,17 +409,32 @@ linters:
             - google.golang.org/protobuf
             - github.com/jackc/pgx/v5
             - github.com/vixartech/htapi/internal/app/htapi/adapters
-        html-service:
+        html-command:
           files:
-            - "**/internal/app/html/service/**/*.go"
-            - "**/internal/app/html/service/*.go"
+            - "**/internal/app/html/service/command/*.go"
+            - "**/internal/app/html/service/command/**/*.go"
           list-mode: strict
           allow:
             - $gostd
             - github.com/vixartech/gear
             - go.uber.org/mock
-            - github.com/vixartech/html/internal/app/html/domain
-            - github.com/vixartech/html/internal/app/html/service
+            - github.com/vixartech/html/internal/app/html/domain$
+            - github.com/vixartech/html/internal/app/html/domain/
+            - github.com/vixartech/html/internal/app/html/service/command$
+            - github.com/vixartech/html/internal/app/html/service/command/
+        html-query:
+          files:
+            - "**/internal/app/html/service/query/*.go"
+            - "**/internal/app/html/service/query/**/*.go"
+          list-mode: strict
+          allow:
+            - $gostd
+            - github.com/vixartech/gear
+            - go.uber.org/mock
+            - github.com/vixartech/html/internal/app/html/domain$
+            - github.com/vixartech/html/internal/app/html/domain/
+            - github.com/vixartech/html/internal/app/html/service/query$
+            - github.com/vixartech/html/internal/app/html/service/query/
         html-ports:
           files:
             - "**/internal/app/html/ports/**/*.go"

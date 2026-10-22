@@ -19,6 +19,7 @@ import (
 const (
 	layerDomain   = "domain"
 	layerService  = "service"
+	layerCommand  = "command"
 	layerQuery    = "query"
 	layerPorts    = "ports"
 	layerAdapters = "adapters"
@@ -218,15 +219,12 @@ func locate(modulePath string, importPath string) (packageLocation, bool, error)
 		)
 	}
 
-	location := packageLocation{service: parts[0], layer: parts[1]}
-	if !knownLayer(location.layer) {
-		return packageLocation{}, true, fmt.Errorf(
-			"%w: %s uses unknown application layer %q",
-			errInvalidLocation,
-			importPath,
-			location.layer,
-		)
+	layer, err := applicationLayer(parts, importPath)
+	if err != nil {
+		return packageLocation{}, true, err
 	}
+
+	location := packageLocation{service: parts[0], layer: layer}
 
 	owner, err := boundaryOwner(location.layer, parts, importPath)
 	if err != nil {
@@ -236,6 +234,51 @@ func locate(modulePath string, importPath string) (packageLocation, bool, error)
 	location.owner = owner
 
 	return location, true, nil
+}
+
+func applicationLayer(parts []string, importPath string) (string, error) {
+	if !knownLayer(parts[1]) {
+		return "", fmt.Errorf(
+			"%w: %s uses unknown application layer %q",
+			errInvalidLocation,
+			importPath,
+			parts[1],
+		)
+	}
+
+	if htApplication(parts[0]) {
+		return htLayer(parts, importPath)
+	}
+
+	return parts[1], nil
+}
+
+func htApplication(service string) bool {
+	switch service {
+	case "spidertower", "spiderssr", "spiderspa", "htworker", "htindexer", "htapi", "html":
+		return true
+	default:
+		return false
+	}
+}
+
+func htLayer(parts []string, importPath string) (string, error) {
+	if parts[1] != layerService && parts[1] != layerQuery {
+		return parts[1], nil
+	}
+
+	if parts[1] == layerService && len(parts) >= boundaryParts {
+		switch parts[boundaryOwnerIndex] {
+		case layerCommand, layerQuery:
+			return parts[boundaryOwnerIndex], nil
+		}
+	}
+
+	return "", fmt.Errorf(
+		"%w: %s must be placed in service/command or service/query",
+		errInvalidLocation,
+		importPath,
+	)
 }
 
 func knownLayer(layer string) bool {
@@ -276,7 +319,7 @@ func permitsLayer(source packageLocation, target packageLocation) bool {
 	switch source.layer {
 	case layerDomain:
 		return target.layer == layerDomain
-	case layerService, layerQuery:
+	case layerService, layerCommand, layerQuery:
 		return target.layer == layerDomain || target.layer == source.layer
 	case layerPorts, layerAdapters:
 		return coreLayer(target.layer) || sameBoundary(source, target)
@@ -287,7 +330,7 @@ func permitsLayer(source packageLocation, target packageLocation) bool {
 
 func coreLayer(layer string) bool {
 	switch layer {
-	case layerDomain, layerService, layerQuery:
+	case layerDomain, layerService, layerCommand, layerQuery:
 		return true
 	default:
 		return false
