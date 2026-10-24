@@ -204,6 +204,7 @@ func vendorGuardFixture(t *testing.T, binary, root string, env []string) {
 
 func runGuardLinter(t *testing.T, linter, config, root string, env []string) []byte {
 	t.Helper()
+	//nolint:gosec // The executable is supplied only by the trusted local test harness.
 	command := exec.CommandContext(t.Context(), linter, "run", "--config", config,
 		"--allow-parallel-runners", "--concurrency=2",
 		"--enable-only", "depguard", "--output.json.path=stdout", "--output.text.path=", "./...")

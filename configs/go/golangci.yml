@@ -442,8 +442,9 @@ linters:
           list-mode: strict
           allow:
             - $gostd
-            # Generated Support DTOs use this email scalar at the HTTP boundary.
+            # Generated Support DTOs and bounded image identification belong at the HTTP boundary.
             - github.com/oapi-codegen/runtime/types$
+            - golang.org/x/image/webp$
             - github.com/vixartech/gear
             - go.uber.org/mock
             - github.com/vixartech/support/internal/app/support/domain
