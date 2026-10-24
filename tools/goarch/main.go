@@ -255,7 +255,7 @@ func applicationLayer(parts []string, importPath string) (string, error) {
 
 func htApplication(service string) bool {
 	switch service {
-	case "spidertower", "spiderssr", "spiderspa", "htworker", "htindexer", "htapi", "html":
+	case "spidertower", "spiderssr", "spiderspa", "htworker", "htindexer", "htapi", "html", "support":
 		return true
 	default:
 		return false

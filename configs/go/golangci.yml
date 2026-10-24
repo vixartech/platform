@@ -409,6 +409,62 @@ linters:
             - google.golang.org/protobuf
             - github.com/jackc/pgx/v5
             - github.com/vixartech/htapi/internal/app/htapi/adapters
+        support-command:
+          files:
+            - "**/internal/app/support/service/command/*.go"
+            - "**/internal/app/support/service/command/**/*.go"
+          list-mode: strict
+          allow:
+            - $gostd
+            - github.com/vixartech/gear
+            - go.uber.org/mock
+            - github.com/vixartech/support/internal/app/support/domain$
+            - github.com/vixartech/support/internal/app/support/domain/
+            - github.com/vixartech/support/internal/app/support/service/command$
+            - github.com/vixartech/support/internal/app/support/service/command/
+        support-query:
+          files:
+            - "**/internal/app/support/service/query/*.go"
+            - "**/internal/app/support/service/query/**/*.go"
+          list-mode: strict
+          allow:
+            - $gostd
+            - github.com/vixartech/gear
+            - go.uber.org/mock
+            - github.com/vixartech/support/internal/app/support/domain$
+            - github.com/vixartech/support/internal/app/support/domain/
+            - github.com/vixartech/support/internal/app/support/service/query$
+            - github.com/vixartech/support/internal/app/support/service/query/
+        support-ports:
+          files:
+            - "**/internal/app/support/ports/**/*.go"
+            - "**/internal/app/support/ports/*.go"
+          list-mode: strict
+          allow:
+            - $gostd
+            - github.com/vixartech/gear
+            - go.uber.org/mock
+            - github.com/vixartech/support/internal/app/support/domain
+            - github.com/vixartech/support/internal/app/support/service
+            - github.com/vixartech/protocol
+            - google.golang.org/protobuf
+            - github.com/valyala/fasthttp
+            - github.com/vixartech/support/internal/app/support/ports
+        support-adapters:
+          files:
+            - "**/internal/app/support/adapters/**/*.go"
+            - "**/internal/app/support/adapters/*.go"
+          list-mode: strict
+          allow:
+            - $gostd
+            - github.com/vixartech/gear
+            - go.uber.org/mock
+            - github.com/vixartech/support/internal/app/support/domain
+            - github.com/vixartech/support/internal/app/support/service
+            - github.com/vixartech/protocol
+            - google.golang.org/protobuf
+            - github.com/jackc/pgx/v5
+            - github.com/vixartech/support/internal/app/support/adapters
         html-command:
           files:
             - "**/internal/app/html/service/command/*.go"

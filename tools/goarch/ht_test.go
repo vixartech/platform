@@ -6,7 +6,7 @@ import (
 )
 
 func htApps() []string {
-	return []string{"spidertower", "spiderssr", "spiderspa", "htworker", "htindexer", "htapi", "html"}
+	return []string{"spidertower", "spiderssr", "spiderspa", "htworker", "htindexer", "htapi", "html", "support"}
 }
 
 func TestHTLocations(t *testing.T) {
